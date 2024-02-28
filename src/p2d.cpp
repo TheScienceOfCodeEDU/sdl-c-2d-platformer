@@ -33,7 +33,7 @@ main(int argc, char *args[])
         
         Uint64 LastTicks = 0;
         while (1)
-        {
+        {            
             // Update SDL events
             SDL_Event Event;
             if (SDL_PollEvent(&Event))
@@ -51,7 +51,7 @@ main(int argc, char *args[])
                             break;
                     }
                     break;
-                case SDL_KEYUP:                    
+                case SDL_KEYUP:
                     switch(Event.key.keysym.sym){
                         case SDLK_LEFT:
                             Player->Left = 0;
@@ -63,10 +63,9 @@ main(int argc, char *args[])
                     break;
                 }
             }
-
             // Fixed FPS
-            if (SDL_GetTicks() - LastTicks < TICKS_FPS) continue;
-            LastTicks = SDL_GetTicks();
+            if (SDL_GetTicks64() - LastTicks < TICKS_FPS) continue;
+            LastTicks = SDL_GetTicks64();
 
             // Update player
             SDL_Rect *CurrentSrcRect = character_Update(Player);            
