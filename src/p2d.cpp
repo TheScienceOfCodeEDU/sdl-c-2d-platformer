@@ -36,9 +36,14 @@ main(int argc, char *args[])
         {            
             // Update SDL events
             SDL_Event Event;
-            if (SDL_PollEvent(&Event))
+            while (SDL_PollEvent(&Event))
             {
-                if (Event.type == SDL_QUIT) break;
+                if (Event.type == SDL_QUIT) 
+                {
+                    SDL_DestroyTexture(Player->Animations->SpritesTexture);
+                    sdl_utils_Quit(Window, Renderer);
+                    return 0;
+                }
 
                 switch(Event.type) {
                 case SDL_KEYDOWN:
@@ -64,7 +69,7 @@ main(int argc, char *args[])
                 }
             }
             // Fixed FPS
-            if (SDL_GetTicks64() - LastTicks < TICKS_FPS) continue;
+            while (SDL_GetTicks64() - LastTicks < TICKS_FPS) { }
             LastTicks = SDL_GetTicks64();
 
             // Update player
@@ -82,9 +87,7 @@ main(int argc, char *args[])
 
             SDL_RenderPresent(Renderer);
         }
-
-        SDL_DestroyTexture(Player->Animations->SpritesTexture);	
     }
-    sdl_utils_Quit(Window, Renderer);
+    
     return 0;
 }
