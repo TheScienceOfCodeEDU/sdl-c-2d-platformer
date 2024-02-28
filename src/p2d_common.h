@@ -1,4 +1,5 @@
 #ifndef UNITY_BUILD
+ #pragma once
  #include "p2d_globals.h"
  #include <cstdio>
  #include <cstring>

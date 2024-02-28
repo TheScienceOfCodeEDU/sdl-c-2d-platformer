@@ -1,4 +1,5 @@
 #ifndef UNITY_BUILD
+ #pragma once
  #include "p2d_globals.h"
  #ifdef __MINGW32__
   #include <SDL.h>
@@ -34,7 +35,8 @@ struct character_anim {
 struct character {
     int X, Y;
     int W, H;
+    bool Left, Right;
 
-    character_anim Animation;
+    character_anim *Animation;
 };
 

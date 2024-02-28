@@ -1,4 +1,4 @@
-#include <SDL2/SDL_events.h>
+
 #define UNITY_BUILD 1
 #include <stdio.h>
 #include <cstring>
@@ -17,6 +17,7 @@
 #include "p2d_structs.h"
 #include "p2d_memory.h"
 #include "p2d_sprites.h"
+#include "p2d_characters.h"
 
 int
 main(int argc, char *args[])
@@ -28,21 +29,12 @@ main(int argc, char *args[])
     // Init SDL without texture filtering for better pixelart results
     if (sdl_utils_Init("SDL Tutorial", &Window, &Renderer, 0)) 
     {
-        SDL_Texture *Texture = sdl_utils_loadTexture("res/characters.png", Renderer);
-
-        character_anim *Animations = LoadCharacterAnimations(&Arena);
+        character *Player = character_CreatePlayer(&Arena, Renderer);
         
-        // Sprite source rectangle
-        /*SDL_Rect SrcRect = {9, 42, 15, 22};
-        SDL_Rect SrcRect2 = {41, 41, 15, 22};
-        SDL_Rect SrcRect3 = {72, 42, 16, 22};
-        SDL_Rect SrcRect4 = {104, 41, 17, 22};
-        // Target rectangle (note that we will paint it at x4 its original size)*/
         SDL_Rect DestRect = {0, 0, 15 * 4, 22 * 4};
         int desired_fps = 30;
         int last_ticks = SDL_GetTicks();
-        bool Left = 0;
-        bool Right = 0;
+        
         while (1)
         {
             SDL_Event Event;
@@ -54,20 +46,20 @@ main(int argc, char *args[])
                 case SDL_KEYDOWN:
                     switch(Event.key.keysym.sym){
                         case SDLK_LEFT:
-                            Left = 1;
+                            Player->Left = 1;
                             break;
                         case SDLK_RIGHT:
-                            Right = 1;
+                            Player->Right = 1;
                             break;
                     }
                     break;
                 case SDL_KEYUP:                    
                     switch(Event.key.keysym.sym){
                         case SDLK_LEFT:
-                            Left = 0;
+                            Player->Left = 0;
                             break;
                         case SDLK_RIGHT:
-                            Right = 0;
+                            Player->Right = 0;
                             break;
                     }
                     break;
@@ -82,43 +74,45 @@ main(int argc, char *args[])
 
             SDL_RenderClear(Renderer);
 
-            if (Left || Right)
-                Animations->State = E_ANIM_STATE_WALKING;
+            character_anim_state LastState = Player->Animation->State;
+            if (!Player->Left && !Player->Right)
+            {
+                Player->Animation->State = E_ANIM_STATE_IDLE;
+            }                
             else
-                Animations->State = E_ANIM_STATE_IDLE;
-            
-            if (Left)
-                DestRect.x -= 5;
-            if (Right)
-                DestRect.x  += 5;
+            {
+                Player->Animation->State = E_ANIM_STATE_WALKING;
+                if (Player->Left)
+                    Player->X -= 5;
+                if (Player->Right)
+                    Player->X += 5;
+            }
 
+            if (LastState != Player->Animation->State)
+            {
+                Player->Animation->Frame = 0;
+            }
+            
             // Find current set of sprites
-            anim_sprites *CurrentSprites = Animations->AnimationsPerState;
-            for (int i = 0; i < Animations->State; ++i)
-            {
-                ++CurrentSprites;
-            }
-
+            anim_sprites *CurrentSprites = character_GetCurrentAnimationSet(Player);
             
-            SDL_Rect *CurrentRect = CurrentSprites->SpritesRects;
-            for (int i = 0; i < Animations->Frame; ++i) 
-            {
-                CurrentRect++;
-            }
+            SDL_Rect *CurrentRect = character_GetSpriteRect(CurrentSprites, Player->Animation->Frame);
+            DestRect.x = Player->X;
+            DestRect.y = Player->Y;
             DestRect.w = CurrentRect->w * 4;
             DestRect.h = CurrentRect->h * 4;       
-            SDL_RenderCopy(Renderer, Texture, CurrentRect, &DestRect);
+            SDL_RenderCopy(Renderer, Player->Animation->SpritesTexture, CurrentRect, &DestRect);
 
-            --Animations->NextUpdate;
-            if (Animations->NextUpdate == 0)
+            --Player->Animation->NextUpdate;
+            if (Player->Animation->NextUpdate == 0)
             {
-                Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
-                Animations->Frame = (Animations->Frame + 1) % CurrentSprites->Count;
+                Player->Animation->NextUpdate = ANIMATION_NEXT_UPDATE;
+                Player->Animation->Frame = (Player->Animation->Frame + 1) % CurrentSprites->Count;
             }
             SDL_RenderPresent(Renderer); 
         }
 
-        SDL_DestroyTexture(Texture);		
+        SDL_DestroyTexture(Player->Animation->SpritesTexture);	
     }
     sdl_utils_Quit(Window, Renderer);
     return 0;

@@ -1,5 +1,7 @@
 #ifndef UNITY_BUILD
+ #pragma once
  #include "p2d_memory.h"
+ #include "p2d_sdl_utils.h"
  #include "p2d_structs.h"
  #ifdef __MINGW32__
   #include <SDL.h>
@@ -11,7 +13,7 @@
 #endif
 
 function character_anim *
-LoadCharacterAnimations(arena *Arena)
+LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
 {
     assert(E_ANIM_STATES_SIZE == 2);
     assert(E_ANIM_STATE_IDLE == 0);
@@ -45,6 +47,7 @@ LoadCharacterAnimations(arena *Arena)
     Anim->Frame = 0;
     Anim->NextUpdate = ANIMATION_NEXT_UPDATE;
     Anim->AnimationsPerState = Sprites;
+    Anim->SpritesTexture = sdl_utils_loadTexture("res/characters.png", Renderer);
 
     return Anim;
 }

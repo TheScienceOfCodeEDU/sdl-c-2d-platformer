@@ -1,4 +1,5 @@
 #ifndef UNITY_BUILD
+ #pragma once
  #include <stdint.h>
 #endif
 

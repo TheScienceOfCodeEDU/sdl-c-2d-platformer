@@ -1,4 +1,5 @@
 #ifndef UNITY_BUILD
+ #pragma once
  #include <cstring>
  #include <stdlib.h>
  #include <assert.h>

@@ -1,4 +1,5 @@
 #ifndef UNITY_BUILD
+ #pragma once
  #include "p2d_globals.h"
  #ifdef __MINGW32__
   #include <SDL.h>
