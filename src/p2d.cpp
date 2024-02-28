@@ -31,7 +31,7 @@ main(int argc, char *args[])
     {
         character *Player = character_CreatePlayer(&Arena, Renderer);
         
-        Uint64 LastTicks = 0;  
+        Uint64 LastTicks = 0;
         while (1)
         {
             // Update SDL events

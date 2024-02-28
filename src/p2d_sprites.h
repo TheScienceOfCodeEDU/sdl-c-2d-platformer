@@ -1,14 +1,14 @@
 #ifndef UNITY_BUILD
  #pragma once
- #include "p2d_memory.h"
- #include "p2d_sdl_utils.h"
- #include "p2d_structs.h"
  #ifdef __MINGW32__
   #include <SDL.h>
   #include <SDL_image.h>
  #else
   #include <SDL2/SDL.h>
   #include <SDL2/SDL_image.h>
+ #include "p2d_memory.h"
+ #include "p2d_sdl_utils.h"
+ #include "p2d_structs.h"
  #endif
 #endif
 

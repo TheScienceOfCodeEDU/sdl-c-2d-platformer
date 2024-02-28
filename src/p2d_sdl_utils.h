@@ -1,6 +1,5 @@
 #ifndef UNITY_BUILD
  #pragma once
- #include "p2d_globals.h"
  #ifdef __MINGW32__
   #include <SDL.h>
   #include <SDL_image.h>
@@ -8,6 +7,7 @@
   #include <SDL2/SDL.h>
   #include <SDL2/SDL_image.h>
  #endif
+ #include "p2d_globals.h"
 #endif
 
 

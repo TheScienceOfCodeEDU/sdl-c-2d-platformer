@@ -1,9 +1,5 @@
 #ifndef UNITY_BUILD
-#pragma once
- #include "p2d_memory.h"
- #include "p2d_sprites.h"
- #include "p2d_globals.h"
- #include "p2d_structs.h"
+ #pragma once
  #ifdef __MINGW32__
   #include <SDL.h>
   #include <SDL_image.h>
@@ -11,6 +7,11 @@
   #include <SDL2/SDL.h>
   #include <SDL2/SDL_image.h>
  #endif
+ #include "p2d_memory.h"
+ #include "p2d_sprites.h"
+ #include "p2d_globals.h"
+ #include "p2d_structs.h"
+ 
 #endif
 
 inline function character *
