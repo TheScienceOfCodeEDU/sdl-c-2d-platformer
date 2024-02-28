@@ -69,8 +69,6 @@ main(int argc, char *args[])
             LastTicks = SDL_GetTicks();
 
             // Update player
-            
-            
             SDL_Rect *CurrentSrcRect = character_Update(Player);            
 
             // Render
