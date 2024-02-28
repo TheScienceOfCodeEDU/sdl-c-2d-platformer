@@ -11,25 +11,25 @@
 #endif
 
 
-struct anim_sprites {
+const uint8 E_CHARACTER_STATES_SIZE = 2;
+enum character_state {
+    E_CHARACTER_STATE_IDLE,
+    E_CHARACTER_STATE_WALKING
+};
+
+struct animation_sprites {
     SDL_Rect *SpritesRects;
     int Count;
 };
 
 
-const uint8 E_ANIM_STATES_SIZE = 2;
-enum character_anim_state {
-    E_ANIM_STATE_IDLE,
-    E_ANIM_STATE_WALKING
-};
-
-struct character_anim {
-    character_anim_state State;
+struct character_animations {
+    character_state State;
     int Frame;
     int NextUpdate;
 
     SDL_Texture *SpritesTexture;
-    anim_sprites *AnimationsPerState;
+    animation_sprites *AnimationsPerState;
 };
 
 struct character {
@@ -37,6 +37,6 @@ struct character {
     int W, H;
     bool Left, Right;
 
-    character_anim *Animation;
+    character_animations *Animations;
 };
 

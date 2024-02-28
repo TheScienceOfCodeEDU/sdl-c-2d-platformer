@@ -69,49 +69,24 @@ main(int argc, char *args[])
             LastTicks = SDL_GetTicks();
 
             // Update player
-            character_anim_state LastState = Player->Animation->State;
-            if (!Player->Left && !Player->Right)
-            {
-                Player->Animation->State = E_ANIM_STATE_IDLE;
-            }                
-            else
-            {
-                Player->Animation->State = E_ANIM_STATE_WALKING;
-                if (Player->Left)
-                    Player->X -= 5;
-                if (Player->Right)
-                    Player->X += 5;
-            }
-
-            if (LastState != Player->Animation->State)
-            {
-                Player->Animation->Frame = 0;
-            }
             
-            // Find current set of sprites
-            anim_sprites *CurrentSprites = character_GetCurrentAnimationSet(Player);
-            SDL_Rect *CurrentRect = character_GetSpriteRect(CurrentSprites, Player->Animation->Frame);
+            
+            SDL_Rect *CurrentSrcRect = character_Update(Player);            
+
+            // Render
+            SDL_RenderClear(Renderer);
+
             SDL_Rect DestRect;
             DestRect.x = Player->X;
             DestRect.y = Player->Y;
-            DestRect.w = CurrentRect->w * 4;
-            DestRect.h = CurrentRect->h * 4;
+            DestRect.w = CurrentSrcRect->w * RENDER_SCALE;
+            DestRect.h = CurrentSrcRect->h * RENDER_SCALE;
+            SDL_RenderCopy(Renderer, Player->Animations->SpritesTexture, CurrentSrcRect, &DestRect);
 
-            // Render
-            SDL_RenderClear(Renderer);    
-            SDL_RenderCopy(Renderer, Player->Animation->SpritesTexture, CurrentRect, &DestRect);
             SDL_RenderPresent(Renderer);
-
-            // Update animation
-            --Player->Animation->NextUpdate;
-            if (Player->Animation->NextUpdate == 0)
-            {
-                Player->Animation->NextUpdate = ANIMATION_NEXT_UPDATE;
-                Player->Animation->Frame = (Player->Animation->Frame + 1) % CurrentSprites->Count;
-            }
         }
 
-        SDL_DestroyTexture(Player->Animation->SpritesTexture);	
+        SDL_DestroyTexture(Player->Animations->SpritesTexture);	
     }
     sdl_utils_Quit(Window, Renderer);
     return 0;

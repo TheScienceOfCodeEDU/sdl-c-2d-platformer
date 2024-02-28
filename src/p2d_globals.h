@@ -19,6 +19,7 @@ typedef uint32_t uint32;
 
 const int FPS = 30;
 const int TICKS_FPS = 1000 / FPS;
+const int RENDER_SCALE = 4;
 
 // Screen dimension constants
 const int SCREEN_WIDTH = 640;

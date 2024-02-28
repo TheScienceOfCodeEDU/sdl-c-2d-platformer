@@ -12,12 +12,12 @@
  #endif
 #endif
 
-function character_anim *
+function character_animations *
 LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
 {
-    assert(E_ANIM_STATES_SIZE == 2);
-    assert(E_ANIM_STATE_IDLE == 0);
-    assert(E_ANIM_STATE_WALKING == 1);
+    assert(E_CHARACTER_STATES_SIZE == 2);
+    assert(E_CHARACTER_STATE_IDLE == 0);
+    assert(E_CHARACTER_STATE_WALKING == 1);
 
     const int IDLE_COUNT = 1;
     SDL_Rect *IdleSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * IDLE_COUNT);
@@ -33,8 +33,8 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     *(++CurrentWalkingSprite) = {9, 42, 15, 22};
 
     
-    anim_sprites *Sprites = (anim_sprites *) ReserveMemory(Arena, sizeof(anim_sprites) * E_ANIM_STATES_SIZE);
-    anim_sprites *CurrentSprite = Sprites;
+    animation_sprites *Sprites = (animation_sprites *) ReserveMemory(Arena, sizeof(animation_sprites) * E_CHARACTER_STATES_SIZE);
+    animation_sprites *CurrentSprite = Sprites;
     CurrentSprite->SpritesRects = IdleSpritesRects;
     CurrentSprite->Count = IDLE_COUNT;
 
@@ -42,8 +42,8 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     CurrentSprite->SpritesRects = WalkingSpritesRects;
     CurrentSprite->Count = WALKING_COUNT;
 
-    character_anim *Anim = (character_anim *) ReserveMemory(Arena, sizeof(character_anim));
-    Anim->State = E_ANIM_STATE_IDLE;
+    character_animations *Anim = (character_animations *) ReserveMemory(Arena, sizeof(character_animations));
+    Anim->State = E_CHARACTER_STATE_IDLE;
     Anim->Frame = 0;
     Anim->NextUpdate = ANIMATION_NEXT_UPDATE;
     Anim->AnimationsPerState = Sprites;

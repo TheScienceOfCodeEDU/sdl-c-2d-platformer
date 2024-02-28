@@ -13,38 +13,78 @@
  #endif
 #endif
 
-function character *
+inline function character *
 character_CreatePlayer(arena *Arena, SDL_Renderer *Renderer)
 {
-    character_anim *Animations = LoadCharacterAnimations(Arena, Renderer);
+    character_animations *Animations = LoadCharacterAnimations(Arena, Renderer);
     character *Character = (character*) ReserveMemory(Arena, sizeof(character));
     Character->X = 0;
     Character->Y = 200;
     Character->W = 15;
     Character->H = 22;
-    Character->Animation = Animations;
+    Character->Animations = Animations;
 
     return Character;
 }
 
-function anim_sprites *
-character_GetCurrentAnimationSet(character *Character)
+inline function animation_sprites *
+character_GetCurrentAnimationSprites(character *Character)
 {
-    anim_sprites *CurrentSprites = Character->Animation->AnimationsPerState;
-    for (int i = 0; i < Character->Animation->State; ++i)
+    animation_sprites *CurrentSprites = Character->Animations->AnimationsPerState;
+    for (int i = 0; i < Character->Animations->State; ++i)
     {
         ++CurrentSprites;
     }
     return CurrentSprites;
 }
 
-function SDL_Rect *
-character_GetSpriteRect(anim_sprites *Sprites, int Frame) 
+inline function SDL_Rect *
+character_GetAnimationSpriteRect(animation_sprites *Sprites, int Frame) 
 {
     SDL_Rect *CurrentRect = Sprites->SpritesRects;
     for (int i = 0; i < Frame; ++i) 
     {
         CurrentRect++;
     }
+    return CurrentRect;
+}
+
+inline function SDL_Rect *
+character_Update(character *Character)
+{
+    // State
+    character_state LastState = Character->Animations->State;
+    if (!Character->Left && !Character->Right)
+    {
+        Character->Animations->State = E_CHARACTER_STATE_IDLE;
+    }                
+    else
+    {
+        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+        if (Character->Left)
+            Character->X -= 5;
+        if (Character->Right)
+            Character->X += 5;
+    }
+
+    // Changed state?
+    if (LastState != Character->Animations->State)
+    {
+        Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
+        Character->Animations->Frame = 0;
+    }
+
+    // Get current sprite
+    animation_sprites *CurrentSprites = character_GetCurrentAnimationSprites(Character);
+    SDL_Rect *CurrentRect = character_GetAnimationSpriteRect(CurrentSprites, Character->Animations->Frame);
+
+    // Update animation
+    --Character->Animations->NextUpdate;
+    if (Character->Animations->NextUpdate == 0)
+    {
+        Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
+        Character->Animations->Frame = (Character->Animations->Frame + 1) % CurrentSprites->Count;
+    }
+
     return CurrentRect;
 }
