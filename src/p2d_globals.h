@@ -17,6 +17,9 @@ typedef uint16_t uint16;
 typedef int32_t int32;
 typedef uint32_t uint32;
 
+const int FPS = 30;
+const int TICKS_FPS = 1000 / FPS;
+
 // Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
