@@ -3,6 +3,7 @@
 #endif
 
 #define function static
+#define internal static
 
 #define Kilobytes(Value) ((Value)*1024)
 #define Megabytes(Value) (Kilobytes(Value)*1024)
@@ -22,3 +23,5 @@ const int SCREEN_HEIGHT = 480;
 const int BG_R = 128;
 const int BG_G = 153;
 const int BG_B = 151;
+
+const int ANIMATION_NEXT_UPDATE = 3;
