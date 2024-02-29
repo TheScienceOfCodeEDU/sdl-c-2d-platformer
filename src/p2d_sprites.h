@@ -27,7 +27,7 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     const int WALKING_COUNT = 4;
     SDL_Rect *WalkingSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * WALKING_COUNT);
     SDL_Rect *CurrentWalkingSprite = WalkingSpritesRects;
-    *CurrentWalkingSprite = { 41, 42, 15, 22};
+    *CurrentWalkingSprite = { 41, 41, 15, 22};
     *(++CurrentWalkingSprite) = {72, 42, 16, 22};
     *(++CurrentWalkingSprite) = {104, 41, 17, 22};
     *(++CurrentWalkingSprite) = {9, 42, 15, 22};
