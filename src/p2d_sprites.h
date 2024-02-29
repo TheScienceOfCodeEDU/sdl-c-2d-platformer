@@ -47,7 +47,7 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     Anim->Frame = 0;
     Anim->NextUpdate = ANIMATION_NEXT_UPDATE;
     Anim->AnimationsPerState = Sprites;
-    Anim->SpritesTexture = sdl_utils_loadTexture("res/characters.png", Renderer);
+    Anim->SpritesTexture = IMG_LoadTexture(Renderer, "res/characters.png");
 
     return Anim;
 }
