@@ -10,11 +10,11 @@
 #define LOG_SIZE_IN_BYTES Megabytes(90)
 
 //NOTE(pipecaniza): right now the arena is not capable to free resources(linear allocator) to avoid fragmentation
-struct arena
+struct
 {
     uint8* MemoryArena;
     uint32 BufferSize;
-};
+} typedef arena;
 
 function arena
 MakeArena()

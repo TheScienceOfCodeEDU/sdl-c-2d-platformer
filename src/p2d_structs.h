@@ -17,26 +17,26 @@ enum character_state {
     E_CHARACTER_STATE_WALKING
 };
 
-struct animation_sprites {
+struct {
     SDL_Rect *SpritesRects;
     int Count;
-};
+} typedef animation_sprites;
 
 
-struct character_animations {
+struct {
     character_state State;
     int Frame;
     int NextUpdate;
 
     SDL_Texture *SpritesTexture;
     animation_sprites *AnimationsPerState;
-};
+} typedef character_animations;
 
-struct character {
+struct {
     int X, Y;
     int W, H;
     bool Left, Right;
 
     character_animations *Animations;
-};
+} typedef  character;
 
