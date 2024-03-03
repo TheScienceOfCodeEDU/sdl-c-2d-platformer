@@ -3,8 +3,6 @@
  #include "p2d_globals.h"
  #include <cstdio>
  #include <cstring>
- #include <cctype>
- #include <type_traits>
  #include <stdbool.h>
 #endif
 
