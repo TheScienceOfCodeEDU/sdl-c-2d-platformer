@@ -1,10 +1,9 @@
-
 #define UNITY_BUILD 1
 #include <stdio.h>
 #include <cstring>
 #include <stdlib.h>
 #include <assert.h>
-#ifdef __MINGW32__
+#ifdef _WIN64
  #include <SDL.h>
  #include <SDL_image.h>
 #else
@@ -13,9 +12,9 @@
 #endif
 #include "p2d_globals.h"
 #include "p2d_common.h"
-#include "p2d_sdl_utils.h"
 #include "p2d_structs.h"
 #include "p2d_memory.h"
+#include "p2d_sdl_utils.h"
 #include "p2d_sprites.h"
 #include "p2d_characters.h"
 

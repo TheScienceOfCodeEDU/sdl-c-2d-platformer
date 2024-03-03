@@ -1,15 +1,16 @@
+#include "SDL_image.h"
 #ifndef UNITY_BUILD
  #pragma once
- #ifdef __MINGW32__
+ #ifdef _WIN64
   #include <SDL.h>
   #include <SDL_image.h>
  #else
   #include <SDL2/SDL.h>
   #include <SDL2/SDL_image.h>
- #include "p2d_memory.h"
- #include "p2d_sdl_utils.h"
- #include "p2d_structs.h"
  #endif
+ #include "p2d_memory.h"
+ #include "p2d_structs.h"
+ #include "p2d_sdl_utils.h" 
 #endif
 
 function character_animations *
