@@ -12,10 +12,10 @@
 
 
 const uint8 E_CHARACTER_STATES_SIZE = 2;
-enum character_state {
+enum {
     E_CHARACTER_STATE_IDLE,
     E_CHARACTER_STATE_WALKING
-};
+} typedef character_state;
 
 struct {
     SDL_Rect *SpritesRects;

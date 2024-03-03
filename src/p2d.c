@@ -1,8 +1,10 @@
 #define UNITY_BUILD 1
-#include <stdio.h>
-#include <cstring>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdio>       // IWYU pragma: keep
+#include <cstring>      // IWYU pragma: keep
+#include <stdlib.h>     // IWYU pragma: keep
+#include <assert.h>     // IWYU pragma: keep
+#include <cctype>       // IWYU pragma: keep
+#include <type_traits>  // IWYU pragma: keep
 #ifdef _WIN64
  #include <SDL.h>
  #include <SDL_image.h>

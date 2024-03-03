@@ -7,11 +7,11 @@
  #include <type_traits>
 #endif
 
-struct buffer
+typedef struct 
 {
     uint8* Data;
     int32 Size;
-};
+} buffer;
 typedef buffer string;
 
 #define BundleStringC(S) MakeString((uint8*)S, strlen(S))
