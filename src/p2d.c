@@ -5,6 +5,7 @@
 #include <assert.h>     // IWYU pragma: keep
 #include <cctype>       // IWYU pragma: keep
 #include <type_traits>  // IWYU pragma: keep
+#include <stdbool.h>    // IWYU pragma: keep
 #ifdef _WIN64
  #include <SDL.h>
  #include <SDL_image.h>

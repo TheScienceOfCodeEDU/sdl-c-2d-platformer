@@ -5,6 +5,7 @@
  #include <cstring>
  #include <cctype>
  #include <type_traits>
+ #include <stdbool.h>
 #endif
 
 typedef struct 
