@@ -1,4 +1,3 @@
-#include "SDL_image.h"
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -23,15 +22,15 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     const int IDLE_COUNT = 1;
     SDL_Rect *IdleSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * IDLE_COUNT);
     SDL_Rect *CurrentIdleSprite = IdleSpritesRects;
-    *IdleSpritesRects = { 9, 42, 15, 22};
+    *IdleSpritesRects = (SDL_Rect) { 9, 42, 15, 22};
 
     const int WALKING_COUNT = 4;
     SDL_Rect *WalkingSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * WALKING_COUNT);
     SDL_Rect *CurrentWalkingSprite = WalkingSpritesRects;
-    *CurrentWalkingSprite = { 41, 41, 15, 22};
-    *(++CurrentWalkingSprite) = {72, 42, 16, 22};
-    *(++CurrentWalkingSprite) = {104, 41, 17, 22};
-    *(++CurrentWalkingSprite) = {9, 42, 15, 22};
+    *CurrentWalkingSprite = (SDL_Rect) { 41, 41, 15, 22};
+    *(++CurrentWalkingSprite) = (SDL_Rect) {72, 42, 16, 22};
+    *(++CurrentWalkingSprite) = (SDL_Rect) {104, 41, 17, 22};
+    *(++CurrentWalkingSprite) = (SDL_Rect) {9, 42, 15, 22};
 
     
     animation_sprites *Sprites = (animation_sprites *) ReserveMemory(Arena, sizeof(animation_sprites) * E_CHARACTER_STATES_SIZE);
