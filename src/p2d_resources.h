@@ -115,9 +115,9 @@ resources_CreateGamestate(arena *Arena, SDL_Renderer *Renderer)
 {
     gamestate *Gamestate = (gamestate*) ReserveMemory(Arena, sizeof(gamestate));
     character_animations *Animations = resources_LoadCharacterAnimations(Arena, Renderer);
-    Gamestate->Player = character_CreatePlayer(Arena, Animations, Renderer);
+    Gamestate->Player = character_MakePlayer(Animations);
     Gamestate->Tilemap = resources_LoadTilemap(Arena, Renderer);
-    Gamestate->Camera = camera_Create(Arena, Gamestate->Player);
+    Gamestate->Camera = camera_MakeCamera(&Gamestate->Player);
     Gamestate->Renderer = Renderer;
 
     return Gamestate;

@@ -12,16 +12,16 @@
  #include "p2d_structs.h"
  #endif
 
-inline function character *
-character_CreatePlayer(arena *Arena, character_animations *Animations, SDL_Renderer *Renderer)
+inline function character
+character_MakePlayer(character_animations *Animations)
 {
-    character *Character = (character*) ReserveMemory(Arena, sizeof(character));
-    Character->X = 0;
-    Character->Y = 200;
-    Character->W = 15 * RENDER_SCALE;
-    Character->H = 22 * RENDER_SCALE;
-    Character->W_MID = Character->W / 2;
-    Character->Animations = Animations;
+    character Character = {};
+    Character.X = 0;
+    Character.Y = 200;
+    Character.W = 15 * RENDER_SCALE;
+    Character.H = 22 * RENDER_SCALE;
+    Character.W_MID = Character.W / 2;
+    Character.Animations = Animations;
 
     return Character;
 }
@@ -105,36 +105,37 @@ character_GetCurrentSprite(character *Character)
 inline function void
 character_ProcessKeyboardEvents(gamestate *Gamestate, SDL_Event *Event)
 {
+    character* Player = &Gamestate->Player;
     switch(Event->type) {
     case SDL_KEYDOWN:
         switch(Event->key.keysym.sym) {
             case SDLK_LEFT:
-                Gamestate->Player->Left = 1;
+                Player->Left = 1;
                 break;
             case SDLK_RIGHT:
-                Gamestate->Player->Right = 1;
+                Player->Right = 1;
                 break;
             case SDLK_UP:
-                Gamestate->Player->Up = 1;
+                Player->Up = 1;
                 break;
             case SDLK_DOWN:
-                Gamestate->Player->Down = 1;
+                Player->Down = 1;
                 break;
         }
         break;
     case SDL_KEYUP:
         switch(Event->key.keysym.sym) {
             case SDLK_LEFT:
-                Gamestate->Player->Left = 0;
+                Player->Left = 0;
                 break;
             case SDLK_RIGHT:
-                Gamestate->Player->Right = 0;
+                Player->Right = 0;
                 break;
             case SDLK_UP:
-                Gamestate->Player->Up = 0;
+                Player->Up = 0;
                 break;
             case SDLK_DOWN:
-                Gamestate->Player->Down = 0;
+                Player->Down = 0;
                 break;
         }
         break;

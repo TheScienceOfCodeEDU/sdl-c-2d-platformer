@@ -42,7 +42,7 @@ main(int argc, char *args[])
             {
                 if (Event.type == SDL_QUIT) 
                 {
-                    SDL_DestroyTexture(Gamestate->Player->Animations->SpritesTexture);
+                    SDL_DestroyTexture(Gamestate->Player.Animations->SpritesTexture);
                     sdl_utils_Quit(Window, Renderer);
                     return 0;
                 }
@@ -55,8 +55,8 @@ main(int argc, char *args[])
             LastTicks = SDL_GetTicks64();
 
             // Update
-            character_Update(Gamestate->Player);
-            camera_Update(Gamestate->Camera);
+            character_Update(&Gamestate->Player);
+            camera_Update(&Gamestate->Camera);
 
             render_Draw(Gamestate);            
         }

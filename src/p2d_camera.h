@@ -13,11 +13,11 @@
 #endif
 
 
-inline function camera *
-camera_Create(arena *Arena, character *Focus) 
+inline function camera
+camera_MakeCamera(character *Focus) 
 {
-    camera *Camera = (camera *) ReserveMemory(Arena, sizeof(camera));
-    Camera->Focus = Focus;
+    camera Camera = {};
+    Camera.Focus = Focus;
 
     return Camera;
 }

@@ -20,8 +20,8 @@ render_Draw(gamestate *Gamestate)
 {
     SDL_Renderer *Renderer = Gamestate->Renderer;
     tilemap *Tilemap = Gamestate->Tilemap;
-    character *Player = Gamestate->Player;
-    camera *Camera = Gamestate->Camera;
+    character *Player = &Gamestate->Player;
+    camera *Camera = &Gamestate->Camera;
 
     SDL_RenderClear(Renderer);
 

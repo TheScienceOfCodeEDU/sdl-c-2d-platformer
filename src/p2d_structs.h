@@ -77,7 +77,7 @@ struct {
 //
 struct {
     SDL_Renderer *Renderer;
-    character *Player;
-    camera *Camera;
+    character Player;
     tilemap *Tilemap;
+    camera Camera;    
 } typedef gamestate;
