@@ -1,8 +1,8 @@
 #ifndef UNITY_BUILD
  #pragma once
  #include "p2d_globals.h"
- #include <cstdio>
- #include <cstring>
+ #include <stdio.h>
+ #include <string.h>
  #include <stdbool.h>
 #endif
 

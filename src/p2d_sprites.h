@@ -1,3 +1,5 @@
+#include <SDL2/SDL_rwops.h>
+#include <SDL2/SDL_stdinc.h>
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -50,4 +52,50 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     Anim->SpritesTexture = IMG_LoadTexture(Renderer, "res/characters.png");
 
     return Anim;
+}
+
+function tilemap*
+LoadTiles(arena *Arena, SDL_Renderer *Renderer)
+{
+    tilemap *Tilemap = (tilemap *) ReserveMemory(Arena, sizeof(tilemap));
+    Tilemap->TilesTexture = IMG_LoadTexture(Renderer, "res/sheet.png");
+    Tilemap->TileSize = 16;
+
+    Tilemap->TilesRects =  (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect));
+    *Tilemap->TilesRects = (SDL_Rect) {129, 0, 16, 16};
+    Tilemap->TileRectsCount = 1;
+
+    size_t DataSize;
+    void *MapContents = SDL_LoadFile("res/map.p2d", &DataSize);
+
+    int MapX = 0;
+    int MapY = 0;
+    char *Current = (char *)MapContents;
+    char *CurrentNumber = Current;
+    while (*Current != '\0') 
+    {
+        bool NewLine = 0;
+        if (*Current == '\n') 
+        {
+            NewLine = 1;
+        }
+
+        if (*Current == ',' || *Current == '\n')
+        {
+            *Current = '\0';
+            Tilemap->Tiles[MapY][MapX] = strtol(CurrentNumber, 0, 10);
+            CurrentNumber = Current + 1;
+            ++MapX;
+        }
+
+        if (NewLine) 
+        {
+            ++MapY;
+            MapX = 0;
+        }
+        ++Current;
+    }
+    
+    SDL_free(MapContents);
+    return Tilemap;
 }

@@ -1,3 +1,4 @@
+#include <SDL2/SDL_rect.h>
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -10,6 +11,9 @@
  #include "p2d_globals.h"
 #endif
 
+//
+// Characters
+//
 
 const uint8 E_CHARACTER_STATES_SIZE = 2;
 enum {
@@ -40,3 +44,17 @@ struct {
     character_animations *Animations;
 } typedef  character;
 
+
+//
+// Tile map
+//
+
+#define MAX_MAP_SIZE 32
+
+struct {
+    int TileSize;
+    int Tiles[MAX_MAP_SIZE][MAX_MAP_SIZE];
+    SDL_Rect *TilesRects;
+    int TileRectsCount;
+    SDL_Texture *TilesTexture;
+} typedef tilemap;

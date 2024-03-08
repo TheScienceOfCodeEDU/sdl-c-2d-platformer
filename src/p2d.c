@@ -1,3 +1,4 @@
+#include "p2d_map.h"
 #define UNITY_BUILD 1
 #include <stdio.h>       // IWYU pragma: keep
 #include <string.h>      // IWYU pragma: keep
@@ -29,6 +30,7 @@ main(int argc, char *args[])
     if (sdl_utils_Init("SDL Tutorial", &Window, &Renderer, 0)) 
     {
         character *Player = character_CreatePlayer(&Arena, Renderer);
+        tilemap *Tilemap = LoadTiles(&Arena, Renderer);
         
         Uint64 LastTicks = 0;
         while (1)
@@ -76,6 +78,8 @@ main(int argc, char *args[])
 
             // Render
             SDL_RenderClear(Renderer);
+
+            map_Draw(Tilemap, Renderer);
 
             SDL_Rect DestRect;
             DestRect.x = Player->X;

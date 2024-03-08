@@ -1,6 +1,6 @@
 #ifndef UNITY_BUILD
  #pragma once
- #include <cstring>
+ #include <string.h>
  #include <stdlib.h>
  #include <assert.h>
  #include "p2d_common.h"
