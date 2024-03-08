@@ -8,16 +8,13 @@
   #include <SDL2/SDL_image.h>
  #endif
  #include "p2d_memory.h"
- #include "p2d_resources.h"
  #include "p2d_globals.h"
  #include "p2d_structs.h"
- 
-#endif
+ #endif
 
 inline function character *
-character_CreatePlayer(arena *Arena, SDL_Renderer *Renderer)
+character_CreatePlayer(arena *Arena, character_animations *Animations, SDL_Renderer *Renderer)
 {
-    character_animations *Animations = resources_LoadCharacterAnimations(Arena, Renderer);
     character *Character = (character*) ReserveMemory(Arena, sizeof(character));
     Character->X = 0;
     Character->Y = 200;
@@ -51,7 +48,7 @@ character_GetAnimationSpriteRect(animation_sprites *Sprites, int Frame)
     return CurrentRect;
 }
 
-inline function SDL_Rect *
+inline function void
 character_Update(character *Character)
 {
     // State
@@ -85,18 +82,61 @@ character_Update(character *Character)
         Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
         Character->Animations->Frame = 0;
     }
+    else
+    {   
+        --Character->Animations->NextUpdate;
+        if (Character->Animations->NextUpdate == 0)
+        {
+            Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
+            animation_sprites *CurrentSprites = character_GetCurrentAnimationSprites(Character);
+            Character->Animations->Frame = (Character->Animations->Frame + 1) % CurrentSprites->Count;
+        }
+    }
+}
 
-    // Get current sprite
+inline function SDL_Rect *
+character_GetCurrentSprite(character *Character)
+{
     animation_sprites *CurrentSprites = character_GetCurrentAnimationSprites(Character);
     SDL_Rect *CurrentRect = character_GetAnimationSpriteRect(CurrentSprites, Character->Animations->Frame);
-
-    // Update animation
-    --Character->Animations->NextUpdate;
-    if (Character->Animations->NextUpdate == 0)
-    {
-        Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
-        Character->Animations->Frame = (Character->Animations->Frame + 1) % CurrentSprites->Count;
-    }
-
     return CurrentRect;
+}
+
+inline function void
+character_ProcessKeyboardEvents(gamestate *Gamestate, SDL_Event *Event)
+{
+    switch(Event->type) {
+    case SDL_KEYDOWN:
+        switch(Event->key.keysym.sym) {
+            case SDLK_LEFT:
+                Gamestate->Player->Left = 1;
+                break;
+            case SDLK_RIGHT:
+                Gamestate->Player->Right = 1;
+                break;
+            case SDLK_UP:
+                Gamestate->Player->Up = 1;
+                break;
+            case SDLK_DOWN:
+                Gamestate->Player->Down = 1;
+                break;
+        }
+        break;
+    case SDL_KEYUP:
+        switch(Event->key.keysym.sym) {
+            case SDLK_LEFT:
+                Gamestate->Player->Left = 0;
+                break;
+            case SDLK_RIGHT:
+                Gamestate->Player->Right = 0;
+                break;
+            case SDLK_UP:
+                Gamestate->Player->Up = 0;
+                break;
+            case SDLK_DOWN:
+                Gamestate->Player->Down = 0;
+                break;
+        }
+        break;
+    }
 }

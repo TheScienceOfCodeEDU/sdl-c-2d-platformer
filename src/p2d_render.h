@@ -1,4 +1,3 @@
-#include <SDL2/SDL_render.h>
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef __MINGW32__
@@ -11,13 +10,24 @@
  #include "p2d_memory.h"
  #include "p2d_resources.h"
  #include "p2d_globals.h"
- #include "p2d_structs.h"
- 
+ #include "p2d_camera.h"
+ #include "p2d_structs.h" 
+ #include "p2d_characters.h"
 #endif
 
 inline function void
-map_Draw(tilemap *Tilemap, camera *Camera, SDL_Renderer *Renderer)
+render_Draw(gamestate *Gamestate)
 {
+    SDL_Renderer *Renderer = Gamestate->Renderer;
+    tilemap *Tilemap = Gamestate->Tilemap;
+    character *Player = Gamestate->Player;
+    camera *Camera = Gamestate->Camera;
+
+    SDL_RenderClear(Renderer);
+
+    //
+    // Tilemap
+    //
     int TileSize = Tilemap->TileSize;
     int TargetSize = TileSize * RENDER_SCALE;
     for (int i = 0; i < MAX_MAP_SIZE; ++i) 
@@ -38,4 +48,17 @@ map_Draw(tilemap *Tilemap, camera *Camera, SDL_Renderer *Renderer)
             SDL_RenderCopy(Renderer, Tilemap->TilesTexture, SrcRect, &DestRect);
         }
     }
+
+    //
+    // Character
+    //
+    SDL_Rect *CurrentSrcRect = character_GetCurrentSprite(Player);
+    SDL_Rect DestRect;
+    DestRect.x = Player->X - Camera->X;
+    DestRect.y = Player->Y - Camera->Y;
+    DestRect.w = CurrentSrcRect->w * RENDER_SCALE;
+    DestRect.h = CurrentSrcRect->h * RENDER_SCALE;
+    SDL_RenderCopy(Renderer, Player->Animations->SpritesTexture, CurrentSrcRect, &DestRect);
+    
+    SDL_RenderPresent(Renderer);
 }

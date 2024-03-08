@@ -1,3 +1,4 @@
+
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -8,11 +9,16 @@
   #include <SDL2/SDL_image.h>
  #endif
  #include "p2d_memory.h"
- #include "p2d_structs.h"
  #include "p2d_sdl_utils.h" 
+ #include "p2d_structs.h"
+ #include "p2d_camera.h"
+ #include "p2d_characters.h"
 #endif
 
-function character_animations *
+//
+// Character resources
+//
+inline function character_animations *
 resources_LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
 {
     assert(E_CHARACTER_STATES_SIZE == 2);
@@ -52,6 +58,9 @@ resources_LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
     return Anim;
 }
 
+//
+// Tilemap resources
+//
 function tilemap*
 resources_LoadTilemap(arena *Arena, SDL_Renderer *Renderer)
 {
@@ -96,4 +105,20 @@ resources_LoadTilemap(arena *Arena, SDL_Renderer *Renderer)
     
     SDL_free(MapContents);
     return Tilemap;
+}
+
+//
+// Gamestate
+//
+inline function gamestate *
+resources_CreateGamestate(arena *Arena, SDL_Renderer *Renderer)
+{
+    gamestate *Gamestate = (gamestate*) ReserveMemory(Arena, sizeof(gamestate));
+    character_animations *Animations = resources_LoadCharacterAnimations(Arena, Renderer);
+    Gamestate->Player = character_CreatePlayer(Arena, Animations, Renderer);
+    Gamestate->Tilemap = resources_LoadTilemap(Arena, Renderer);
+    Gamestate->Camera = camera_Create(Arena, Gamestate->Player);
+    Gamestate->Renderer = Renderer;
+
+    return Gamestate;
 }

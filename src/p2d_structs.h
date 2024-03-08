@@ -1,4 +1,5 @@
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -43,7 +44,7 @@ struct {
     bool Left, Right, Up, Down;
 
     character_animations *Animations;
-} typedef  character;
+} typedef character;
 
 
 //
@@ -60,7 +61,6 @@ struct {
     SDL_Texture *TilesTexture;
 } typedef tilemap;
 
-
 //
 // Camera
 //
@@ -69,4 +69,15 @@ struct {
     int X, Y;
     int W, H;
     character* Focus;
-} typedef  camera;
+} typedef camera;
+
+
+//
+// Game state
+//
+struct {
+    SDL_Renderer *Renderer;
+    character *Player;
+    camera *Camera;
+    tilemap *Tilemap;
+} typedef gamestate;

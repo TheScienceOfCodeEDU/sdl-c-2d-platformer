@@ -8,10 +8,10 @@
   #include <SDL2/SDL_image.h>
  #endif
  #include "p2d_memory.h"
- #include "p2d_resources.h"
  #include "p2d_globals.h"
  #include "p2d_structs.h"
 #endif
+
 
 inline function camera *
 camera_Create(arena *Arena, character *Focus) 
@@ -22,11 +22,9 @@ camera_Create(arena *Arena, character *Focus)
     return Camera;
 }
 
-
 inline function void
 camera_Update(camera *Camera)
 {
     Camera->X = Camera->Focus->X - SCREEN_W_CAM + Camera->Focus->W_MID;
     Camera->Y = Camera->Focus->Y - SCREEN_H_CAM;    
 }
-
