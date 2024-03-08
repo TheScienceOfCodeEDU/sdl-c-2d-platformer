@@ -8,18 +8,15 @@
   #include <SDL2/SDL_image.h>
  #endif
  #include "p2d_memory.h"
- #include "p2d_resources.h"
  #include "p2d_globals.h"
- #include "p2d_camera.h"
- #include "p2d_structs.h" 
- #include "p2d_characters.h"
+ #include "p2d_gamestate.h"
 #endif
 
 inline function void
 render_Draw(gamestate *Gamestate)
 {
     SDL_Renderer *Renderer = Gamestate->Renderer;
-    tilemap *Tilemap = Gamestate->Tilemap;
+    tilemap *Tilemap = &Gamestate->Tilemap;
     character *Player = &Gamestate->Player;
     camera *Camera = &Gamestate->Camera;
 
@@ -28,7 +25,7 @@ render_Draw(gamestate *Gamestate)
     //
     // Tilemap
     //
-    int TileSize = Tilemap->TileSize;
+    int TileSize = Tilemap->Resources->TileSize;
     int TargetSize = TileSize * RENDER_SCALE;
     for (int i = 0; i < MAX_MAP_SIZE; ++i) 
     {
@@ -37,15 +34,15 @@ render_Draw(gamestate *Gamestate)
             int CurrentTile = Tilemap->Tiles[j][i] - 1; // As 0 means empty, adjust CurrentTile value 
             if (CurrentTile == -1) continue;
 
-            SDL_Rect *SrcRect = Tilemap->TilesRects;
-            for (int r = 0; r < Tilemap->TileRectsCount && r < CurrentTile - 1; ++r)
+            SDL_Rect *SrcRect = Tilemap->Resources->TilesRects;
+            for (int r = 0; r < Tilemap->Resources->TileRectsCount && r < CurrentTile - 1; ++r)
             {
                 ++SrcRect;
             }
 
             SDL_Rect DestRect;
             DestRect = (SDL_Rect){ i * TargetSize - Camera->X, j * TargetSize - Camera->Y, TargetSize, TargetSize};            
-            SDL_RenderCopy(Renderer, Tilemap->TilesTexture, SrcRect, &DestRect);
+            SDL_RenderCopy(Renderer, Tilemap->Resources->TilesTexture, SrcRect, &DestRect);
         }
     }
 

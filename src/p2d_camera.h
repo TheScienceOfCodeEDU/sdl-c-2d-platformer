@@ -9,8 +9,18 @@
  #endif
  #include "p2d_memory.h"
  #include "p2d_globals.h"
- #include "p2d_structs.h"
+ #include "p2d_characters.h"
 #endif
+
+//
+// Camera
+//
+
+struct {
+    int X, Y;
+    int W, H;
+    character* Focus;
+} typedef camera;
 
 
 inline function camera

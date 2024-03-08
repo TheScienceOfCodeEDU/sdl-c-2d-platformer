@@ -15,11 +15,12 @@
 #include "p2d_common.h"
 #include "p2d_memory.h"
 #include "p2d_sdl_utils.h"
-#include "p2d_structs.h"
 #include "p2d_characters.h"
 #include "p2d_camera.h"
+#include "p2d_tilemap.h"
+#include "p2d_gamestate.h"
 #include "p2d_render.h"
-#include "p2d_resources.h"
+
 
 int
 main(int argc, char *args[])
@@ -31,7 +32,7 @@ main(int argc, char *args[])
     // Init SDL without texture filtering for better pixelart results
     if (sdl_utils_Init("SDL Tutorial", &Window, &Renderer, 0)) 
     {
-        gamestate *Gamestate = resources_CreateGamestate(&Arena, Renderer);
+        gamestate *Gamestate = resources_LoadResources_MakeGamestate(&Arena, Renderer);
 
         Uint64 LastTicks = 0;
         while (1)
@@ -47,7 +48,7 @@ main(int argc, char *args[])
                     return 0;
                 }
 
-                character_ProcessKeyboardEvents(Gamestate, &Event);
+                character_ProcessKeyboardEvents(&Gamestate->Player, &Event);
             }
 
             // Fixed FPS

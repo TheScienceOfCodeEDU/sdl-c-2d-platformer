@@ -9,8 +9,44 @@
  #endif
  #include "p2d_memory.h"
  #include "p2d_globals.h"
- #include "p2d_structs.h"
- #endif
+#endif
+
+//
+// Character animation data
+//
+const uint8 E_CHARACTER_STATES_SIZE = 2;
+enum {
+    E_CHARACTER_STATE_IDLE,
+    E_CHARACTER_STATE_WALKING
+} typedef character_state;
+
+struct {
+    SDL_Rect *SpritesRects;
+    int Count;
+} typedef animation_sprites;
+
+
+struct {
+    character_state State;
+    int Frame;
+    int NextUpdate;
+
+    SDL_Texture *SpritesTexture;
+    animation_sprites *AnimationsPerState;
+} typedef character_animations;
+
+//
+// Character entity data
+//
+struct {
+    int X, Y;
+    int W, H;
+    int W_MID;
+    bool Left, Right, Up, Down;
+
+    character_animations *Animations;
+} typedef character;
+
 
 inline function character
 character_MakePlayer(character_animations *Animations)
@@ -103,9 +139,8 @@ character_GetCurrentSprite(character *Character)
 }
 
 inline function void
-character_ProcessKeyboardEvents(gamestate *Gamestate, SDL_Event *Event)
+character_ProcessKeyboardEvents(character *Player, SDL_Event *Event)
 {
-    character* Player = &Gamestate->Player;
     switch(Event->type) {
     case SDL_KEYDOWN:
         switch(Event->key.keysym.sym) {
@@ -140,4 +175,48 @@ character_ProcessKeyboardEvents(gamestate *Gamestate, SDL_Event *Event)
         }
         break;
     }
+}
+
+
+//
+// Character resources
+//
+inline function character_animations *
+resources_LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
+{
+    assert(E_CHARACTER_STATES_SIZE == 2);
+    assert(E_CHARACTER_STATE_IDLE == 0);
+    assert(E_CHARACTER_STATE_WALKING == 1);
+
+    const int IDLE_COUNT = 1;
+    SDL_Rect *IdleSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * IDLE_COUNT);
+    SDL_Rect *CurrentIdleSprite = IdleSpritesRects;
+    *IdleSpritesRects = (SDL_Rect) { 9, 42, 15, 22};
+
+    const int WALKING_COUNT = 4;
+    SDL_Rect *WalkingSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * WALKING_COUNT);
+    SDL_Rect *CurrentWalkingSprite = WalkingSpritesRects;
+    *CurrentWalkingSprite = (SDL_Rect) { 41, 41, 15, 22};
+    *(++CurrentWalkingSprite) = (SDL_Rect) {72, 42, 16, 22};
+    *(++CurrentWalkingSprite) = (SDL_Rect) {104, 41, 17, 22};
+    *(++CurrentWalkingSprite) = (SDL_Rect) {9, 42, 15, 22};
+
+    
+    animation_sprites *Sprites = (animation_sprites *) ReserveMemory(Arena, sizeof(animation_sprites) * E_CHARACTER_STATES_SIZE);
+    animation_sprites *CurrentSprite = Sprites;
+    CurrentSprite->SpritesRects = IdleSpritesRects;
+    CurrentSprite->Count = IDLE_COUNT;
+
+    ++CurrentSprite;
+    CurrentSprite->SpritesRects = WalkingSpritesRects;
+    CurrentSprite->Count = WALKING_COUNT;
+
+    character_animations *Anim = (character_animations *) ReserveMemory(Arena, sizeof(character_animations));
+    Anim->State = E_CHARACTER_STATE_IDLE;
+    Anim->Frame = 0;
+    Anim->NextUpdate = ANIMATION_NEXT_UPDATE;
+    Anim->AnimationsPerState = Sprites;
+    Anim->SpritesTexture = IMG_LoadTexture(Renderer, "res/characters.png");
+
+    return Anim;
 }
