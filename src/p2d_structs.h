@@ -39,7 +39,8 @@ struct {
 struct {
     int X, Y;
     int W, H;
-    bool Left, Right;
+    int W_MID;
+    bool Left, Right, Up, Down;
 
     character_animations *Animations;
 } typedef  character;
@@ -58,3 +59,14 @@ struct {
     int TileRectsCount;
     SDL_Texture *TilesTexture;
 } typedef tilemap;
+
+
+//
+// Camera
+//
+
+struct {
+    int X, Y;
+    int W, H;
+    character* Focus;
+} typedef  camera;

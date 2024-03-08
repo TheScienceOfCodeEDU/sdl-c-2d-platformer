@@ -24,6 +24,10 @@ const int RENDER_SCALE = 4;
 // Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const int SCREEN_W_CAM = SCREEN_WIDTH / 2;
+const int SCREEN_H_CAM = 2 * (SCREEN_HEIGHT / 3);
+
+const int CHARACTER_SPEED = 10;
 
 const int BG_R = 128;
 const int BG_G = 153;

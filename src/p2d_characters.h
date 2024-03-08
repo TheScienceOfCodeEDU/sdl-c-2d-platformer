@@ -21,8 +21,9 @@ character_CreatePlayer(arena *Arena, SDL_Renderer *Renderer)
     character *Character = (character*) ReserveMemory(Arena, sizeof(character));
     Character->X = 0;
     Character->Y = 200;
-    Character->W = 15;
-    Character->H = 22;
+    Character->W = 15 * RENDER_SCALE;
+    Character->H = 22 * RENDER_SCALE;
+    Character->W_MID = Character->W / 2;
     Character->Animations = Animations;
 
     return Character;
@@ -55,17 +56,27 @@ character_Update(character *Character)
 {
     // State
     character_state LastState = Character->Animations->State;
-    if (!Character->Left && !Character->Right)
+
+    Character->Animations->State = E_CHARACTER_STATE_IDLE;
+    if (Character->Left)
     {
-        Character->Animations->State = E_CHARACTER_STATE_IDLE;
-    }                
-    else
-    {
+        Character->X -= CHARACTER_SPEED;
         Character->Animations->State = E_CHARACTER_STATE_WALKING;
-        if (Character->Left)
-            Character->X -= 5;
-        if (Character->Right)
-            Character->X += 5;
+    }
+    if (Character->Right)
+    {
+        Character->X += CHARACTER_SPEED;
+        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+    }
+    if (Character->Up)
+    {
+        Character->Y -= CHARACTER_SPEED;
+        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+    }
+    if (Character->Down)
+    {
+        Character->Y += CHARACTER_SPEED;
+        Character->Animations->State = E_CHARACTER_STATE_WALKING;
     }
 
     // Changed state?

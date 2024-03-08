@@ -1,3 +1,5 @@
+#include "p2d_camera.h"
+#include <SDL2/SDL_keycode.h>
 #define UNITY_BUILD 1
 #include <stdio.h>              // IWYU pragma: keep
 #include <string.h>             // IWYU pragma: keep
@@ -31,7 +33,8 @@ main(int argc, char *args[])
     {
         character *Player = character_CreatePlayer(&Arena, Renderer);
         tilemap *Tilemap = resources_LoadTilemap(&Arena, Renderer);
-        
+        camera *Camera = camera_Create(&Arena, Player);
+
         Uint64 LastTicks = 0;
         while (1)
         {            
@@ -55,6 +58,12 @@ main(int argc, char *args[])
                         case SDLK_RIGHT:
                             Player->Right = 1;
                             break;
+                        case SDLK_UP:
+                            Player->Up = 1;
+                            break;
+                        case SDLK_DOWN:
+                            Player->Down = 1;
+                            break;
                     }
                     break;
                 case SDL_KEYUP:
@@ -65,6 +74,12 @@ main(int argc, char *args[])
                         case SDLK_RIGHT:
                             Player->Right = 0;
                             break;
+                        case SDLK_UP:
+                            Player->Up = 0;
+                            break;
+                        case SDLK_DOWN:
+                            Player->Down = 0;
+                            break;
                     }
                     break;
                 }
@@ -74,16 +89,17 @@ main(int argc, char *args[])
             LastTicks = SDL_GetTicks64();
 
             // Update player
-            SDL_Rect *CurrentSrcRect = character_Update(Player);            
+            SDL_Rect *CurrentSrcRect = character_Update(Player);
+            camera_Update(Camera);
 
             // Render
             SDL_RenderClear(Renderer);
 
-            map_Draw(Tilemap, Renderer);
+            map_Draw(Tilemap, Camera, Renderer);
 
             SDL_Rect DestRect;
-            DestRect.x = Player->X;
-            DestRect.y = Player->Y;
+            DestRect.x = Player->X - Camera->X;
+            DestRect.y = Player->Y - Camera->Y;
             DestRect.w = CurrentSrcRect->w * RENDER_SCALE;
             DestRect.h = CurrentSrcRect->h * RENDER_SCALE;
             SDL_RenderCopy(Renderer, Player->Animations->SpritesTexture, CurrentSrcRect, &DestRect);

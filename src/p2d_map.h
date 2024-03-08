@@ -16,7 +16,7 @@
 #endif
 
 inline function void
-map_Draw(tilemap *Tilemap, SDL_Renderer *Renderer)
+map_Draw(tilemap *Tilemap, camera *Camera, SDL_Renderer *Renderer)
 {
     int TileSize = Tilemap->TileSize;
     int TargetSize = TileSize * RENDER_SCALE;
@@ -34,7 +34,7 @@ map_Draw(tilemap *Tilemap, SDL_Renderer *Renderer)
             }
 
             SDL_Rect DestRect;
-            DestRect = (SDL_Rect){ i * TargetSize, j * TargetSize, TargetSize, TargetSize};            
+            DestRect = (SDL_Rect){ i * TargetSize - Camera->X, j * TargetSize - Camera->Y, TargetSize, TargetSize};            
             SDL_RenderCopy(Renderer, Tilemap->TilesTexture, SrcRect, &DestRect);
         }
     }
