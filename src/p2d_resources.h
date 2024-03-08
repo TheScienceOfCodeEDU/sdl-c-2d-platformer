@@ -1,5 +1,3 @@
-#include <SDL2/SDL_rwops.h>
-#include <SDL2/SDL_stdinc.h>
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -15,7 +13,7 @@
 #endif
 
 function character_animations *
-LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
+resources_LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
 {
     assert(E_CHARACTER_STATES_SIZE == 2);
     assert(E_CHARACTER_STATE_IDLE == 0);
@@ -55,7 +53,7 @@ LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
 }
 
 function tilemap*
-LoadTiles(arena *Arena, SDL_Renderer *Renderer)
+resources_LoadTilemap(arena *Arena, SDL_Renderer *Renderer)
 {
     tilemap *Tilemap = (tilemap *) ReserveMemory(Arena, sizeof(tilemap));
     Tilemap->TilesTexture = IMG_LoadTexture(Renderer, "res/sheet.png");

@@ -8,7 +8,7 @@
   #include <SDL2/SDL_image.h>
  #endif
  #include "p2d_memory.h"
- #include "p2d_sprites.h"
+ #include "p2d_resources.h"
  #include "p2d_globals.h"
  #include "p2d_structs.h"
  
@@ -17,7 +17,7 @@
 inline function character *
 character_CreatePlayer(arena *Arena, SDL_Renderer *Renderer)
 {
-    character_animations *Animations = LoadCharacterAnimations(Arena, Renderer);
+    character_animations *Animations = resources_LoadCharacterAnimations(Arena, Renderer);
     character *Character = (character*) ReserveMemory(Arena, sizeof(character));
     Character->X = 0;
     Character->Y = 200;

@@ -1,9 +1,8 @@
-#include "p2d_map.h"
 #define UNITY_BUILD 1
-#include <stdio.h>       // IWYU pragma: keep
-#include <string.h>      // IWYU pragma: keep
-#include <assert.h>     // IWYU pragma: keep
-#include <stdbool.h>    // IWYU pragma: keep
+#include <stdio.h>              // IWYU pragma: keep
+#include <string.h>             // IWYU pragma: keep
+#include <assert.h>             // IWYU pragma: keep
+#include <stdbool.h>            // IWYU pragma: keep
 #ifdef _WIN64
  #include <SDL.h>
  #include <SDL_image.h>
@@ -16,8 +15,9 @@
 #include "p2d_structs.h"
 #include "p2d_memory.h"
 #include "p2d_sdl_utils.h"
-#include "p2d_sprites.h"
+#include "p2d_resources.h"
 #include "p2d_characters.h"
+#include "p2d_map.h"
 
 int
 main(int argc, char *args[])
@@ -30,7 +30,7 @@ main(int argc, char *args[])
     if (sdl_utils_Init("SDL Tutorial", &Window, &Renderer, 0)) 
     {
         character *Player = character_CreatePlayer(&Arena, Renderer);
-        tilemap *Tilemap = LoadTiles(&Arena, Renderer);
+        tilemap *Tilemap = resources_LoadTilemap(&Arena, Renderer);
         
         Uint64 LastTicks = 0;
         while (1)
