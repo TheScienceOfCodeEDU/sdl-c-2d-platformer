@@ -61,7 +61,7 @@ LoadTiles(arena *Arena, SDL_Renderer *Renderer)
     Tilemap->TilesTexture = IMG_LoadTexture(Renderer, "res/sheet.png");
     Tilemap->TileSize = 16;
 
-    Tilemap->TilesRects =  (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect));
+    Tilemap->TilesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect));
     *Tilemap->TilesRects = (SDL_Rect) {129, 0, 16, 16};
     Tilemap->TileRectsCount = 1;
 
@@ -70,7 +70,7 @@ LoadTiles(arena *Arena, SDL_Renderer *Renderer)
 
     int MapX = 0;
     int MapY = 0;
-    char *Current = (char *)MapContents;
+    char *Current = (char *) MapContents;
     char *CurrentNumber = Current;
     while (*Current != '\0') 
     {
