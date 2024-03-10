@@ -1,5 +1,6 @@
 #ifndef UNITY_BUILD
  #pragma once
+ #include <stdio.h>
  #ifdef _WIN64
   #include <SDL.h>
   #include <SDL_image.h>

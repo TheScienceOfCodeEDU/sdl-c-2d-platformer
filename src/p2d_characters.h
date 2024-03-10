@@ -1,6 +1,6 @@
 #ifndef UNITY_BUILD
  #pragma once
- #ifdef __MINGW32__
+ #ifdef _WIN64
   #include <SDL.h>
   #include <SDL_image.h>
  #else
