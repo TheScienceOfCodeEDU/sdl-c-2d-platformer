@@ -17,24 +17,23 @@
 //
 
 struct {
-    int X, Y;
-    int W, H;
-    character* Focus;
-} typedef camera;
+    int x, y;
+    int w, h;
+    Character *focus;
+} typedef Camera;
 
 
-inline function camera
-camera_MakeCamera(character *Focus) 
+inline function Camera
+camera_Make(Character *focus) 
 {
-    camera Camera = {};
-    Camera.Focus = Focus;
-
-    return Camera;
+    Camera camera = {};
+    camera.focus = focus;
+    return camera;
 }
 
 inline function void
-camera_Update(camera *Camera)
+camera_Update(Camera *camera)
 {
-    Camera->X = Camera->Focus->X - SCREEN_W_CAM + Camera->Focus->W_MID;
-    Camera->Y = Camera->Focus->Y - SCREEN_H_CAM;    
+    camera->x = camera->focus->x - SCREEN_W_CAM + camera->focus->w / 2;
+    camera->y = camera->focus->y - SCREEN_H_CAM;
 }

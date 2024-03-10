@@ -18,27 +18,27 @@
 // Game state
 //
 struct {
-    SDL_Renderer *Renderer;
-    character Player;
-    tilemap Tilemap;
-    camera Camera;    
-} typedef gamestate;
+    SDL_Renderer *renderer;
+    Character player;
+    Tilemap tilemap;
+    Camera camera;
+} typedef Gamestate;
 
 
-inline function gamestate *
-resources_LoadResources_MakeGamestate(arena *Arena, SDL_Renderer *Renderer)
+inline function Gamestate *
+resources_LoadResources_MakeGamestate(Arena *arena, SDL_Renderer *renderer)
 {
-    gamestate *Gamestate = (gamestate*) ReserveMemory(Arena, sizeof(gamestate));
-    Gamestate->Camera = camera_MakeCamera(&Gamestate->Player);
-    Gamestate->Renderer = Renderer;
+    Gamestate *gamestate = (Gamestate*) ReserveMemory(arena, sizeof(Gamestate));
+    gamestate->camera = camera_Make(&gamestate->player);
+    gamestate->renderer = renderer;
 
     // Player character
-    character_animations *Animations = resources_LoadCharacterAnimations(Arena, Renderer);
-    Gamestate->Player = character_MakePlayer(Animations);
+    CharacterAnimations *animations = resources_LoadCharacterAnimations(arena, renderer);
+    gamestate->player = character_MakePlayer(animations);
 
     // Tile map
-    tilemap_resources *TilemapResources = resources_LoadTilemapResources(Arena, Renderer);
-    Gamestate->Tilemap = resources_LoadTilemap(TilemapResources);    
+    TilemapResources *tilemapResources = resources_LoadTilemapResources(arena, renderer);
+    gamestate->tilemap = resources_LoadTilemap(tilemapResources);    
 
-    return Gamestate;
+    return gamestate;
 }

@@ -25,41 +25,42 @@
 int
 main(int argc, char *args[])
 {
-    arena Arena = MakeArena();
+    Arena arena = MakeArena();
 
-    SDL_Window *Window;
-    SDL_Renderer *Renderer;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
     // Init SDL without texture filtering for better pixelart results
-    if (sdl_utils_Init("SDL Tutorial", &Window, &Renderer, 0)) 
+    if (sdl_utils_Init("SDL Tutorial", &window, &renderer, 0)) 
     {
-        gamestate *Gamestate = resources_LoadResources_MakeGamestate(&Arena, Renderer);
+        Gamestate *gamestate = resources_LoadResources_MakeGamestate(&arena, renderer);
 
-        Uint64 LastTicks = 0;
+        Uint64 lastTicks = 0;
         while (1)
         {            
             // Update SDL events
-            SDL_Event Event;
-            while (SDL_PollEvent(&Event))
+            SDL_Event event;
+            while (SDL_PollEvent(&event))
             {
-                if (Event.type == SDL_QUIT) 
+                if (event.type == SDL_QUIT) 
                 {
-                    SDL_DestroyTexture(Gamestate->Player.Animations->SpritesTexture);
-                    sdl_utils_Quit(Window, Renderer);
+                    SDL_DestroyTexture(gamestate->player.animations->spritesTexture);
+                    SDL_DestroyTexture(gamestate->tilemap.resources->tilesTexture);
+                    sdl_utils_Quit(window, renderer);
                     return 0;
                 }
 
-                character_ProcessKeyboardEvents(&Gamestate->Player, &Event);
+                character_ProcessKeyboardEvents(&gamestate->player, &event);
             }
 
             // Fixed FPS
-            while (SDL_GetTicks64() - LastTicks < TICKS_FPS) { }
-            LastTicks = SDL_GetTicks64();
+            while (SDL_GetTicks64() - lastTicks < TICKS_FPS) { }
+            lastTicks = SDL_GetTicks64();
 
             // Update
-            character_Update(&Gamestate->Player);
-            camera_Update(&Gamestate->Camera);
+            character_Update(&gamestate->player);
+            camera_Update(&gamestate->camera);
 
-            render_Draw(Gamestate);            
+            render_Draw(gamestate);            
         }
     }
     

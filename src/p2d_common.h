@@ -8,42 +8,42 @@
 
 typedef struct 
 {
-    uint8* Data;
-    int32 Size;
-} buffer;
-typedef buffer string;
+    uint8 *data;
+    int32 size;
+} Buffer;
+typedef Buffer String;
 
-#define BundleStringC(S) MakeString((uint8*)S, strlen(S))
-#define BundleString(S) MakeString(S, strlen((char*)S))
-inline function string
-MakeString(uint8* Address, int32 Size)
+#define BundleStringC(s) string_Make((uint8 *)s, strlen(s))
+#define BundleString(s) string_Make(s, strlen((char *)s))
+inline function String
+string_Make(uint8 *address, int32 size)
 {
-    string NewString;
-    NewString.Data = Address;
-    NewString.Size = Size;
-    return(NewString);
+    String newString;
+    newString.data = address;
+    newString.size = size;
+    return newString;
 }
 
 inline function void
-StringToChar(string* S, char* C)
+string_ToChar(String *s, char* c)
 {
-    snprintf(C, S->Size + 1, "%s", S->Data);
+    snprintf(c, s->size + 1, "%s", s->data);
 }
 
 inline internal uint32
-GenerateHash(void* MemoryBlock, uint32 SizeInBytes)
+common_GenerateHash(void *memoryBlock, uint32 sizeInBytes)
 {
-    uint8* Ptr = (uint8*)MemoryBlock;
+    uint8 *Ptr = (uint8 *) memoryBlock;
     uint32 Result = 0;
-    for(int i = 0; i < SizeInBytes; ++i)
+    for(int i = 0; i < sizeInBytes; ++i)
 	{
 		Result = Ptr[i] + (Result * 31);
 	}
-    return(Result);
+    return Result;
 }
 
 inline function bool
-IsLittleEndian()
+utils_IsLittleEndian()
 {
     int32 One = 1;
     return (*((uint8*)&One) == 1);

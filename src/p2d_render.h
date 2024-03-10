@@ -1,3 +1,4 @@
+#include "SDL_video.h"
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
@@ -13,49 +14,49 @@
 #endif
 
 inline function void
-render_Draw(gamestate *Gamestate)
+render_Draw(Gamestate *gamestate)
 {
-    SDL_Renderer *Renderer = Gamestate->Renderer;
-    tilemap *Tilemap = &Gamestate->Tilemap;
-    character *Player = &Gamestate->Player;
-    camera *Camera = &Gamestate->Camera;
-
-    SDL_RenderClear(Renderer);
+    SDL_Renderer *renderer = gamestate->renderer;
+    Tilemap *tilemap = &gamestate->tilemap;
+    Character *player = &gamestate->player;
+    Camera *camera = &gamestate->camera;
+    
+    SDL_RenderClear(renderer);
 
     //
     // Tilemap
     //
-    int TileSize = Tilemap->Resources->TileSize;
-    int TargetSize = TileSize * RENDER_SCALE;
+    int tileSize = tilemap->resources->tileSize;
+    int targetSize = tileSize * RENDER_SCALE;
     for (int i = 0; i < MAX_MAP_SIZE; ++i) 
     {
         for (int j = 0; j < MAX_MAP_SIZE; ++j) 
         {
-            int CurrentTile = Tilemap->Tiles[j][i] - 1; // As 0 means empty, adjust CurrentTile value 
+            int CurrentTile = tilemap->tiles[j][i] - 1; // As 0 means empty, adjust CurrentTile value 
             if (CurrentTile == -1) continue;
 
-            SDL_Rect *SrcRect = Tilemap->Resources->TilesRects;
-            for (int r = 0; r < Tilemap->Resources->TileRectsCount && r < CurrentTile - 1; ++r)
+            SDL_Rect *srcRect = tilemap->resources->tilesRects;
+            for (int r = 0; r < tilemap->resources->tileRectsCount && r < CurrentTile - 1; ++r)
             {
-                ++SrcRect;
+                ++srcRect;
             }
 
-            SDL_Rect DestRect;
-            DestRect = (SDL_Rect){ i * TargetSize - Camera->X, j * TargetSize - Camera->Y, TargetSize, TargetSize};            
-            SDL_RenderCopy(Renderer, Tilemap->Resources->TilesTexture, SrcRect, &DestRect);
+            SDL_Rect destRect;
+            destRect = (SDL_Rect){ i * targetSize - camera->x, j * targetSize - camera->y, targetSize, targetSize};            
+            SDL_RenderCopy(renderer, tilemap->resources->tilesTexture, srcRect, &destRect);
         }
     }
 
     //
     // Character
     //
-    SDL_Rect *CurrentSrcRect = character_GetCurrentSprite(Player);
-    SDL_Rect DestRect;
-    DestRect.x = Player->X - Camera->X;
-    DestRect.y = Player->Y - Camera->Y;
-    DestRect.w = CurrentSrcRect->w * RENDER_SCALE;
-    DestRect.h = CurrentSrcRect->h * RENDER_SCALE;
-    SDL_RenderCopy(Renderer, Player->Animations->SpritesTexture, CurrentSrcRect, &DestRect);
+    SDL_Rect *currentSrcRect = character_GetCurrentSprite(player);
+    SDL_Rect destRect;
+    destRect.x = player->x - camera->x;
+    destRect.y = player->y - camera->y;
+    destRect.w = currentSrcRect->w * RENDER_SCALE;
+    destRect.h = currentSrcRect->h * RENDER_SCALE;
+    SDL_RenderCopy(renderer, player->animations->spritesTexture, currentSrcRect, &destRect);
     
-    SDL_RenderPresent(Renderer);
+    SDL_RenderPresent(renderer);
 }

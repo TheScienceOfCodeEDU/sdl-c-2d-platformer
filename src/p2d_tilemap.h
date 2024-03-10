@@ -18,75 +18,75 @@
 #define MAX_MAP_SIZE 32
 
 struct {
-    int TileSize;    
-    SDL_Texture *TilesTexture;
+    int tileSize;    
+    SDL_Texture *tilesTexture;
 
-    SDL_Rect *TilesRects;
-    int TileRectsCount;
-} typedef tilemap_resources;
+    SDL_Rect *tilesRects;
+    int tileRectsCount;
+} typedef TilemapResources;
 
 struct {    
-    int Tiles[MAX_MAP_SIZE][MAX_MAP_SIZE];
-    tilemap_resources *Resources;    
-} typedef tilemap;
+    int tiles[MAX_MAP_SIZE][MAX_MAP_SIZE];
+    TilemapResources *resources;    
+} typedef Tilemap;
 
 
 //
 // Tilemap resources
 //
-inline function tilemap_resources*
-resources_LoadTilemapResources(arena *Arena, SDL_Renderer *Renderer)
+inline function TilemapResources*
+resources_LoadTilemapResources(Arena *arena, SDL_Renderer *renderer)
 {
-    tilemap_resources *Resources = (tilemap_resources *) ReserveMemory(Arena, sizeof(tilemap_resources));
-    Resources->TilesTexture = IMG_LoadTexture(Renderer, "res/sheet.png");
-    Resources->TileSize = 16;
+    TilemapResources *resources = (TilemapResources *) ReserveMemory(arena, sizeof(TilemapResources));
+    resources->tilesTexture = IMG_LoadTexture(renderer, "res/sheet.png");
+    resources->tileSize = 16;
 
-    Resources->TilesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect));
-    *Resources->TilesRects = (SDL_Rect) {129, 0, 16, 16};
-    Resources->TileRectsCount = 1;
+    resources->tilesRects = (SDL_Rect *) ReserveMemory(arena, sizeof(SDL_Rect));
+    *resources->tilesRects = (SDL_Rect) {129, 0, 16, 16};
+    resources->tileRectsCount = 1;
 
-    return Resources;
+    return resources;
 }
 
-inline function tilemap
-resources_LoadTilemap(tilemap_resources *Resources)
+inline function Tilemap
+resources_LoadTilemap(TilemapResources *resources)
 {
-    tilemap Tilemap = {};
-    Tilemap.Resources = Resources;
+    Tilemap tilemap = {};
+    tilemap.resources = resources;
 
     // Load file
-    size_t DataSize;
-    void *MapContents = SDL_LoadFile("res/map.p2d", &DataSize);
+    size_t dataSize;
+    void *mapContents = SDL_LoadFile("res/map.p2d", &dataSize);
 
     // Parse it
-    int MapX = 0;
-    int MapY = 0;
-    char *Current = (char *) MapContents;
-    char *CurrentNumber = Current;
-    while (*Current != '\0') 
+    int mapX = 0;
+    int mapY = 0;
+    char *current = (char *) mapContents;
+    char *currentNumber = current;
+    while (*current != '\0') 
     {
-        bool NewLine = 0;
-        if (*Current == '\n') 
+        bool newLine = 0;
+        if (*current == '\n') 
         {
-            NewLine = 1;
+            newLine = 1;
         }
 
-        if (*Current == ',' || *Current == '\n')
+        if (*current == ',' || *current == '\n')
         {
-            *Current = '\0';
-            Tilemap.Tiles[MapY][MapX] = strtol(CurrentNumber, 0, 10);
-            CurrentNumber = Current + 1;
-            ++MapX;
+            *current = '\0';
+            tilemap.tiles[mapY][mapX] = strtol(currentNumber, 0, 10);
+            currentNumber = current + 1;
+            ++mapX;
         }
 
-        if (NewLine) 
+        if (newLine) 
         {
-            ++MapY;
-            MapX = 0;
+            ++mapY;
+            mapX = 0;
         }
-        ++Current;
+        ++current;
     }
     
-    SDL_free(MapContents);
-    return Tilemap;
+    SDL_free(mapContents);
+    return tilemap;
 }

@@ -12,16 +12,16 @@
 //NOTE(pipecaniza): right now the arena is not capable to free resources(linear allocator) to avoid fragmentation
 struct
 {
-    uint8* MemoryArena;
-    uint32 BufferSize;
-} typedef arena;
+    uint8* memoryArena;
+    uint32 bufferSize;
+} typedef Arena;
 
-function arena
+function Arena
 MakeArena()
 {
-    arena Result = {};
-    Result.MemoryArena = (uint8*)calloc(1, ARENA_SIZE_IN_BYTES);
-    return(Result);
+    Arena result = {};
+    result.memoryArena = (uint8*)calloc(1, ARENA_SIZE_IN_BYTES);
+    return result;
 }
 
 function uint8*
@@ -31,32 +31,32 @@ MakeLog()
 }
 
 function uint8*
-PushToMemory(arena* Arena, void* Ptr, uint32 SizeInBytes)
+PushToMemory(Arena* arena, void* ptr, uint32 sizeInBytes)
 {
-    assert(Arena->BufferSize + SizeInBytes < ARENA_SIZE_IN_BYTES);
+    assert(arena->bufferSize + sizeInBytes < ARENA_SIZE_IN_BYTES);
 
-    uint8* BytePtr = (uint8*)Ptr;
-    uint8* BaseAddress = Arena->MemoryArena + Arena->BufferSize;
-    for (uint32 i = 0; i < SizeInBytes; ++i)
+    uint8* bytePtr = (uint8*)ptr;
+    uint8* baseAddress = arena->memoryArena + arena->bufferSize;
+    for (uint32 i = 0; i < sizeInBytes; ++i)
     {
-        uint8* CurrentByte = BytePtr + i;
-        Arena->MemoryArena[Arena->BufferSize++] = *CurrentByte;
+        uint8* currentByte = bytePtr + i;
+        arena->memoryArena[arena->bufferSize++] = *currentByte;
     }
-    return(BaseAddress);
+    return baseAddress;
 }
 
 
 function void
-PushToMemoryAtLocation(arena* Arena, uint8* ArenaPointer, void* Ptr, uint32 SizeInBytes)
+PushToMemoryAtLocation(Arena* arena, uint8* arenaPointer, void* ptr, uint32 sizeInBytes)
 {
     // NOTE(pipecaniza): Check that ArenaPointer is inside the arena memory
-    assert((ArenaPointer > Arena->MemoryArena && ArenaPointer < Arena->MemoryArena + ARENA_SIZE_IN_BYTES) ||
-            (ArenaPointer < Arena->MemoryArena && ArenaPointer > Arena->MemoryArena + ARENA_SIZE_IN_BYTES));
-    assert(Arena->BufferSize + SizeInBytes < ARENA_SIZE_IN_BYTES);
+    assert((arenaPointer > arena->memoryArena && arenaPointer < arena->memoryArena + ARENA_SIZE_IN_BYTES) ||
+           (arenaPointer < arena->memoryArena && arenaPointer > arena->memoryArena + ARENA_SIZE_IN_BYTES));
+    assert(arena->bufferSize + sizeInBytes < ARENA_SIZE_IN_BYTES);
 
-    uint8* BytePtr = (uint8*)Ptr;
-    uint8* BaseAddress = ArenaPointer;
-    for (uint32 i = 0; i < SizeInBytes; ++i)
+    uint8* BytePtr = (uint8*)ptr;
+    uint8* BaseAddress = arenaPointer;
+    for (uint32 i = 0; i < sizeInBytes; ++i)
     {
         uint8* CurrentByte = BytePtr + i;
         *(BaseAddress + i) = *CurrentByte;
@@ -65,25 +65,25 @@ PushToMemoryAtLocation(arena* Arena, uint8* ArenaPointer, void* Ptr, uint32 Size
 
 
 function uint8*
-ReserveMemory(arena* Arena, uint32 SizeInBytes)
+ReserveMemory(Arena* arena, uint32 sizeInBytes)
 {
-    assert(Arena->BufferSize + SizeInBytes < ARENA_SIZE_IN_BYTES);
-    uint8* BaseAddress = Arena->MemoryArena + Arena->BufferSize;
-    Arena->BufferSize += SizeInBytes;
-    return(BaseAddress);
+    assert(arena->bufferSize + sizeInBytes < ARENA_SIZE_IN_BYTES);
+    uint8* baseAddress = arena->memoryArena + arena->bufferSize;
+    arena->bufferSize += sizeInBytes;
+    return baseAddress;
 }
 
 
-inline function string
-AllocateString(arena* Arena, char* Data)
+inline function String
+AllocateString(Arena* arena, char* data)
 {
-    // Add +1 to store '\0' so we can send the data directly to ImGui without additional steps
-    uint8* Address = PushToMemory(Arena, Data, strlen(Data ) + 1);
+    // Add +1 to store '\0'
+    uint8* Address = PushToMemory(arena, data, strlen(data ) + 1);
     return BundleString(Address);
 }
 
 function void
-ResetArena(arena* Arena) {
-    memset(Arena->MemoryArena, 0, ARENA_SIZE_IN_BYTES);
-    Arena->BufferSize = 0;
+ResetArena(Arena* arena) {
+    memset(arena->memoryArena, 0, ARENA_SIZE_IN_BYTES);
+    arena->bufferSize = 0;
 }

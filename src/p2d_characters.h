@@ -14,163 +14,161 @@
 //
 // Character animation data
 //
-const uint8 E_CHARACTER_STATES_SIZE = 2;
+const uint8 E_SIZE_CHARACTER_STATES = 2;
 enum {
-    E_CHARACTER_STATE_IDLE,
-    E_CHARACTER_STATE_WALKING
-} typedef character_state;
+    ECS_IDLE,
+    ECS_WALKING
+} typedef E_CharacterState;
 
 struct {
-    SDL_Rect *SpritesRects;
-    int Count;
-} typedef animation_sprites;
+    SDL_Rect *spritesRects;
+    int count;
+} typedef AnimationSprites;
 
 
 struct {
-    character_state State;
-    int Frame;
-    int NextUpdate;
+    E_CharacterState state;
+    int frame;
+    int nextUpdate;
 
-    SDL_Texture *SpritesTexture;
-    animation_sprites *AnimationsPerState;
-} typedef character_animations;
+    SDL_Texture *spritesTexture;
+    AnimationSprites *animationsPerState;
+} typedef CharacterAnimations;
 
 //
 // Character entity data
 //
 struct {
-    int X, Y;
-    int W, H;
-    int W_MID;
-    bool Left, Right, Up, Down;
+    int x, y;
+    int w, h;
+    bool left, right, up, down;
 
-    character_animations *Animations;
-} typedef character;
+    CharacterAnimations *animations;
+} typedef Character;
 
 
-inline function character
-character_MakePlayer(character_animations *Animations)
+inline function Character
+character_MakePlayer(CharacterAnimations *animations)
 {
-    character Character = {};
-    Character.X = 0;
-    Character.Y = 200;
-    Character.W = 15 * RENDER_SCALE;
-    Character.H = 22 * RENDER_SCALE;
-    Character.W_MID = Character.W / 2;
-    Character.Animations = Animations;
+    Character character = {};
+    character.x = 0;
+    character.y = 200;
+    character.w = 15 * RENDER_SCALE;
+    character.h = 22 * RENDER_SCALE;
+    character.animations = animations;
 
-    return Character;
+    return character;
 }
 
-inline function animation_sprites *
-character_GetCurrentAnimationSprites(character *Character)
+inline function AnimationSprites *
+character_GetCurrentAnimationSprites(Character *character)
 {
-    animation_sprites *CurrentSprites = Character->Animations->AnimationsPerState;
-    for (int i = 0; i < Character->Animations->State; ++i)
+    AnimationSprites *currentSprites = character->animations->animationsPerState;
+    for (int i = 0; i < character->animations->state; ++i)
     {
-        ++CurrentSprites;
+        ++currentSprites;
     }
-    return CurrentSprites;
+    return currentSprites;
 }
 
 inline function SDL_Rect *
-character_GetAnimationSpriteRect(animation_sprites *Sprites, int Frame) 
+character_GetAnimationSpriteRect(AnimationSprites *sprites, int frame) 
 {
-    SDL_Rect *CurrentRect = Sprites->SpritesRects;
-    for (int i = 0; i < Frame; ++i) 
+    SDL_Rect *currentRect = sprites->spritesRects;
+    for (int i = 0; i < frame; ++i) 
     {
-        CurrentRect++;
+        currentRect++;
     }
-    return CurrentRect;
+    return currentRect;
 }
 
 inline function void
-character_Update(character *Character)
+character_Update(Character *character)
 {
     // State
-    character_state LastState = Character->Animations->State;
+    E_CharacterState LastState = character->animations->state;
 
-    Character->Animations->State = E_CHARACTER_STATE_IDLE;
-    if (Character->Left)
+    character->animations->state = ECS_IDLE;
+    if (character->left)
     {
-        Character->X -= CHARACTER_SPEED;
-        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+        character->x -= CHARACTER_SPEED;
+        character->animations->state = ECS_WALKING;
     }
-    if (Character->Right)
+    if (character->right)
     {
-        Character->X += CHARACTER_SPEED;
-        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+        character->x += CHARACTER_SPEED;
+        character->animations->state = ECS_WALKING;
     }
-    if (Character->Up)
+    if (character->up)
     {
-        Character->Y -= CHARACTER_SPEED;
-        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+        character->y -= CHARACTER_SPEED;
+        character->animations->state = ECS_WALKING;
     }
-    if (Character->Down)
+    if (character->down)
     {
-        Character->Y += CHARACTER_SPEED;
-        Character->Animations->State = E_CHARACTER_STATE_WALKING;
+        character->y += CHARACTER_SPEED;
+        character->animations->state = ECS_WALKING;
     }
 
     // Changed state?
-    if (LastState != Character->Animations->State)
+    if (LastState != character->animations->state)
     {
-        Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
-        Character->Animations->Frame = 0;
+        character->animations->nextUpdate = ANIMATION_NEXT_UPDATE;
+        character->animations->frame = 0;
     }
     else
     {   
-        --Character->Animations->NextUpdate;
-        if (Character->Animations->NextUpdate == 0)
+        --character->animations->nextUpdate;
+        if (character->animations->nextUpdate == 0)
         {
-            Character->Animations->NextUpdate = ANIMATION_NEXT_UPDATE;
-            animation_sprites *CurrentSprites = character_GetCurrentAnimationSprites(Character);
-            Character->Animations->Frame = (Character->Animations->Frame + 1) % CurrentSprites->Count;
+            character->animations->nextUpdate = ANIMATION_NEXT_UPDATE;
+            AnimationSprites *currentSprites = character_GetCurrentAnimationSprites(character);
+            character->animations->frame = (character->animations->frame + 1) % currentSprites->count;
         }
     }
 }
 
 inline function SDL_Rect *
-character_GetCurrentSprite(character *Character)
+character_GetCurrentSprite(Character *character)
 {
-    animation_sprites *CurrentSprites = character_GetCurrentAnimationSprites(Character);
-    SDL_Rect *CurrentRect = character_GetAnimationSpriteRect(CurrentSprites, Character->Animations->Frame);
-    return CurrentRect;
+    AnimationSprites *currentSprites = character_GetCurrentAnimationSprites(character);
+    SDL_Rect *currentRect = character_GetAnimationSpriteRect(currentSprites, character->animations->frame);
+    return currentRect;
 }
 
 inline function void
-character_ProcessKeyboardEvents(character *Player, SDL_Event *Event)
+character_ProcessKeyboardEvents(Character *player, SDL_Event *event)
 {
-    switch(Event->type) {
+    switch(event->type) {
     case SDL_KEYDOWN:
-        switch(Event->key.keysym.sym) {
+        switch(event->key.keysym.sym) {
             case SDLK_LEFT:
-                Player->Left = 1;
+                player->left = 1;
                 break;
             case SDLK_RIGHT:
-                Player->Right = 1;
+                player->right = 1;
                 break;
             case SDLK_UP:
-                Player->Up = 1;
+                player->up = 1;
                 break;
             case SDLK_DOWN:
-                Player->Down = 1;
+                player->down = 1;
                 break;
         }
         break;
     case SDL_KEYUP:
-        switch(Event->key.keysym.sym) {
+        switch(event->key.keysym.sym) {
             case SDLK_LEFT:
-                Player->Left = 0;
+                player->left = 0;
                 break;
             case SDLK_RIGHT:
-                Player->Right = 0;
+                player->right = 0;
                 break;
             case SDLK_UP:
-                Player->Up = 0;
+                player->up = 0;
                 break;
             case SDLK_DOWN:
-                Player->Down = 0;
+                player->down = 0;
                 break;
         }
         break;
@@ -181,42 +179,42 @@ character_ProcessKeyboardEvents(character *Player, SDL_Event *Event)
 //
 // Character resources
 //
-inline function character_animations *
-resources_LoadCharacterAnimations(arena *Arena, SDL_Renderer *Renderer)
+inline function CharacterAnimations *
+resources_LoadCharacterAnimations(Arena *arena, SDL_Renderer *renderer)
 {
-    assert(E_CHARACTER_STATES_SIZE == 2);
-    assert(E_CHARACTER_STATE_IDLE == 0);
-    assert(E_CHARACTER_STATE_WALKING == 1);
+    assert(E_SIZE_CHARACTER_STATES == 2);
+    assert(ECS_IDLE == 0);
+    assert(ECS_WALKING == 1);
 
     const int IDLE_COUNT = 1;
-    SDL_Rect *IdleSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * IDLE_COUNT);
-    SDL_Rect *CurrentIdleSprite = IdleSpritesRects;
-    *IdleSpritesRects = (SDL_Rect) { 9, 42, 15, 22};
+    SDL_Rect *idleSpritesRects = (SDL_Rect *) ReserveMemory(arena, sizeof(SDL_Rect) * IDLE_COUNT);
+    SDL_Rect *currentIdleSprite = idleSpritesRects;
+    *idleSpritesRects = (SDL_Rect) { 9, 42, 15, 22};
 
     const int WALKING_COUNT = 4;
-    SDL_Rect *WalkingSpritesRects = (SDL_Rect *) ReserveMemory(Arena, sizeof(SDL_Rect) * WALKING_COUNT);
-    SDL_Rect *CurrentWalkingSprite = WalkingSpritesRects;
-    *CurrentWalkingSprite = (SDL_Rect) { 41, 41, 15, 22};
-    *(++CurrentWalkingSprite) = (SDL_Rect) {72, 42, 16, 22};
-    *(++CurrentWalkingSprite) = (SDL_Rect) {104, 41, 17, 22};
-    *(++CurrentWalkingSprite) = (SDL_Rect) {9, 42, 15, 22};
+    SDL_Rect *walkingSpritesRects = (SDL_Rect *) ReserveMemory(arena, sizeof(SDL_Rect) * WALKING_COUNT);
+    SDL_Rect *currentWalkingSprite = walkingSpritesRects;
+    *currentWalkingSprite = (SDL_Rect) { 41, 41, 15, 22};
+    *(++currentWalkingSprite) = (SDL_Rect) {72, 42, 16, 22};
+    *(++currentWalkingSprite) = (SDL_Rect) {104, 41, 17, 22};
+    *(++currentWalkingSprite) = (SDL_Rect) {9, 42, 15, 22};
 
     
-    animation_sprites *Sprites = (animation_sprites *) ReserveMemory(Arena, sizeof(animation_sprites) * E_CHARACTER_STATES_SIZE);
-    animation_sprites *CurrentSprite = Sprites;
-    CurrentSprite->SpritesRects = IdleSpritesRects;
-    CurrentSprite->Count = IDLE_COUNT;
+    AnimationSprites *sprites = (AnimationSprites *) ReserveMemory(arena, sizeof(AnimationSprites) * E_SIZE_CHARACTER_STATES);
+    AnimationSprites *currentSprite = sprites;
+    currentSprite->spritesRects = idleSpritesRects;
+    currentSprite->count = IDLE_COUNT;
 
-    ++CurrentSprite;
-    CurrentSprite->SpritesRects = WalkingSpritesRects;
-    CurrentSprite->Count = WALKING_COUNT;
+    ++currentSprite;
+    currentSprite->spritesRects = walkingSpritesRects;
+    currentSprite->count = WALKING_COUNT;
 
-    character_animations *Anim = (character_animations *) ReserveMemory(Arena, sizeof(character_animations));
-    Anim->State = E_CHARACTER_STATE_IDLE;
-    Anim->Frame = 0;
-    Anim->NextUpdate = ANIMATION_NEXT_UPDATE;
-    Anim->AnimationsPerState = Sprites;
-    Anim->SpritesTexture = IMG_LoadTexture(Renderer, "res/characters.png");
+    CharacterAnimations *anim = (CharacterAnimations *) ReserveMemory(arena, sizeof(CharacterAnimations));
+    anim->state = ECS_IDLE;
+    anim->frame = 0;
+    anim->nextUpdate = ANIMATION_NEXT_UPDATE;
+    anim->animationsPerState = sprites;
+    anim->spritesTexture = IMG_LoadTexture(renderer, "res/characters.png");
 
-    return Anim;
+    return anim;
 }
