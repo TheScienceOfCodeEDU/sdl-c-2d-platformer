@@ -4,6 +4,7 @@
 #include <string.h>             // IWYU pragma: keep
 #include <assert.h>             // IWYU pragma: keep
 #include <stdbool.h>            // IWYU pragma: keep
+#include <inttypes.h>
 #ifdef _WIN64
  #include <SDL.h>
  #include <SDL_image.h>
@@ -53,7 +54,22 @@ main(int argc, char *args[])
             }
 
             // Fixed FPS
-            while (SDL_GetTicks64() - lastTicks < TICKS_FPS) { }
+            while (true) 
+            {
+                Uint64 ticks = SDL_GetTicks64();
+                Uint64 current = ticks - lastTicks;
+                if (current == TICKS_FPS) {
+                    break;
+                } else if (current > TICKS_FPS) {
+                    printf("Slow by %" PRId64 " ms\n", current - TICKS_FPS);
+                    break;
+                } else {
+                    Uint64 missingDelay = TICKS_FPS - current - 1;
+                    if (missingDelay > 1) {
+                        SDL_Delay(missingDelay);
+                    }
+                }
+            }
             lastTicks = SDL_GetTicks64();
 
             // Update
