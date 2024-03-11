@@ -31,19 +31,15 @@ main(int argc, char *args[])
     SDL_Window *window;
     SDL_Renderer *renderer;
     // Init SDL without texture filtering for better pixelart results
-    if (sdl_utils_Init("SDL Tutorial", &window, &renderer, 0)) 
-    {
+    if (sdl_utils_Init("SDL Tutorial", &window, &renderer, 0)) {
         Gamestate *gamestate = resources_LoadResources_MakeGamestate(&arena, renderer);
 
         Uint64 lastTicks = 0;
-        while (1)
-        {            
+        while (1) {            
             // Update SDL events
             SDL_Event event;
-            while (SDL_PollEvent(&event))
-            {
-                if (event.type == SDL_QUIT) 
-                {
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
                     SDL_DestroyTexture(gamestate->player.animations->spritesTexture);
                     SDL_DestroyTexture(gamestate->tilemap.resources->tilesTexture);
                     sdl_utils_Quit(window, renderer);
@@ -54,8 +50,7 @@ main(int argc, char *args[])
             }
 
             // Fixed FPS
-            while (true) 
-            {
+            while (1) {
                 Uint64 ticks = SDL_GetTicks64();
                 Uint64 current = ticks - lastTicks;
                 if (current == TICKS_FPS) {
