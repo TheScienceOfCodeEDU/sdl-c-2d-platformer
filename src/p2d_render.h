@@ -1,4 +1,3 @@
-#include "SDL_video.h"
 #ifndef UNITY_BUILD
  #pragma once
  #ifdef _WIN64
