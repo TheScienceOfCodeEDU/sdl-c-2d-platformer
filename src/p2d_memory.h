@@ -37,8 +37,7 @@ PushToMemory(Arena* arena, void* ptr, uint32 sizeInBytes)
 
     uint8* bytePtr = (uint8*)ptr;
     uint8* baseAddress = arena->memoryArena + arena->bufferSize;
-    for (uint32 i = 0; i < sizeInBytes; ++i)
-    {
+    for (uint32 i = 0; i < sizeInBytes; ++i) {
         uint8* currentByte = bytePtr + i;
         arena->memoryArena[arena->bufferSize++] = *currentByte;
     }
@@ -56,8 +55,7 @@ PushToMemoryAtLocation(Arena* arena, uint8* arenaPointer, void* ptr, uint32 size
 
     uint8* BytePtr = (uint8*)ptr;
     uint8* BaseAddress = arenaPointer;
-    for (uint32 i = 0; i < sizeInBytes; ++i)
-    {
+    for (uint32 i = 0; i < sizeInBytes; ++i) {
         uint8* CurrentByte = BytePtr + i;
         *(BaseAddress + i) = *CurrentByte;
     }

@@ -15,13 +15,11 @@
 function inline bool
 sdl_utils_Init(const char *title, SDL_Window **window, SDL_Renderer **renderer, bool textureFiltering)
 {
-    if (SDL_Init(SDL_INIT_VIDEO ) < 0)
-    {
+    if (SDL_Init(SDL_INIT_VIDEO ) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 0;
     }
-    if (textureFiltering)
-    {
+    if (textureFiltering) {
         if (!SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1"))
         {
             printf("Warning: Linear texture filtering not enabled!");
@@ -30,23 +28,20 @@ sdl_utils_Init(const char *title, SDL_Window **window, SDL_Renderer **renderer, 
 
     *window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (window == 0)
-    {
+    if (window == 0) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return 0;
     }
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer == 0)
-    {
+    if (renderer == 0) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return 0;
     }
     SDL_SetRenderDrawColor(*renderer, BG_R, BG_G, BG_B, 0xFF);
     
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
-    if (!(IMG_Init(imgFlags) & imgFlags))
-    {
+    if (!(IMG_Init(imgFlags) & imgFlags)) {
         printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
         return 0;
     }

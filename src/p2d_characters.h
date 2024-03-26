@@ -64,8 +64,7 @@ inline function AnimationSprites *
 character_GetCurrentAnimationSprites(Character *character)
 {
     AnimationSprites *currentSprites = character->animations->animationsPerState;
-    for (int i = 0; i < character->animations->state; ++i)
-    {
+    for (int i = 0; i < character->animations->state; ++i) {
         ++currentSprites;
     }
     return currentSprites;
@@ -75,8 +74,7 @@ inline function SDL_Rect *
 character_GetAnimationSpriteRect(AnimationSprites *sprites, int frame) 
 {
     SDL_Rect *currentRect = sprites->spritesRects;
-    for (int i = 0; i < frame; ++i) 
-    {
+    for (int i = 0; i < frame; ++i) {
         currentRect++;
     }
     return currentRect;
@@ -89,38 +87,30 @@ character_Update(Character *character)
     E_CharacterState LastState = character->animations->state;
 
     character->animations->state = ECS_IDLE;
-    if (character->left)
-    {
+    if (character->left) {
         character->x -= CHARACTER_SPEED;
         character->animations->state = ECS_WALKING;
     }
-    if (character->right)
-    {
+    if (character->right) {
         character->x += CHARACTER_SPEED;
         character->animations->state = ECS_WALKING;
     }
-    if (character->up)
-    {
+    if (character->up) {
         character->y -= CHARACTER_SPEED;
         character->animations->state = ECS_WALKING;
     }
-    if (character->down)
-    {
+    if (character->down) {
         character->y += CHARACTER_SPEED;
         character->animations->state = ECS_WALKING;
     }
 
     // Changed state?
-    if (LastState != character->animations->state)
-    {
+    if (LastState != character->animations->state) {
         character->animations->nextUpdate = ANIMATION_NEXT_UPDATE;
         character->animations->frame = 0;
-    }
-    else
-    {   
+    } else {   
         --character->animations->nextUpdate;
-        if (character->animations->nextUpdate == 0)
-        {
+        if (character->animations->nextUpdate == 0) {
             character->animations->nextUpdate = ANIMATION_NEXT_UPDATE;
             AnimationSprites *currentSprites = character_GetCurrentAnimationSprites(character);
             character->animations->frame = (character->animations->frame + 1) % currentSprites->count;

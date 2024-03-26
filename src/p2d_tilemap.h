@@ -63,24 +63,17 @@ resources_LoadTilemap(TilemapResources *resources)
     int mapY = 0;
     char *current = (char *) mapContents;
     char *currentNumber = current;
-    while (*current != '\0') 
-    {
-        bool newLine = 0;
-        if (*current == '\n') 
-        {
-            newLine = 1;
-        }
+    while (*current != '\0') {
+        const bool newLine = *current == '\n';
 
-        if (*current == ',' || *current == '\n')
-        {
+        if (*current == ',' || newLine) {
             *current = '\0';
             tilemap.tiles[mapY][mapX] = strtol(currentNumber, 0, 10);
             currentNumber = current + 1;
             ++mapX;
         }
 
-        if (newLine) 
-        {
+        if (newLine) {
             ++mapY;
             mapX = 0;
         }

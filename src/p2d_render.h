@@ -27,16 +27,14 @@ render_Draw(Gamestate *gamestate)
     //
     int tileSize = tilemap->resources->tileSize;
     int targetSize = tileSize * RENDER_SCALE;
-    for (int i = 0; i < MAX_MAP_SIZE; ++i) 
-    {
-        for (int j = 0; j < MAX_MAP_SIZE; ++j) 
-        {
+    for (int i = 0; i < MAX_MAP_SIZE; ++i) {
+        for (int j = 0; j < MAX_MAP_SIZE; ++j) {
             int CurrentTile = tilemap->tiles[j][i] - 1; // As 0 means empty, adjust CurrentTile value 
-            if (CurrentTile == -1) continue;
+            if (CurrentTile == -1) 
+                continue;
 
             SDL_Rect *srcRect = tilemap->resources->tilesRects;
-            for (int r = 0; r < tilemap->resources->tileRectsCount && r < CurrentTile - 1; ++r)
-            {
+            for (int r = 0; r < tilemap->resources->tileRectsCount && r < CurrentTile - 1; ++r) {
                 ++srcRect;
             }
 

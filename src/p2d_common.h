@@ -35,8 +35,7 @@ common_GenerateHash(void *memoryBlock, uint32 sizeInBytes)
 {
     uint8 *Ptr = (uint8 *) memoryBlock;
     uint32 Result = 0;
-    for(int i = 0; i < sizeInBytes; ++i)
-	{
+    for(int i = 0; i < sizeInBytes; ++i) {
 		Result = Ptr[i] + (Result * 31);
 	}
     return Result;
